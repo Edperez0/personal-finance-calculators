@@ -152,6 +152,42 @@
           <ul id="loan-warning-list" class="text-xs text-amber-800 mt-2 list-disc pl-4"></ul>
         </div>
 
+        <!-- Snowball vs Avalanche Comparison -->
+        <div id="strategy-comparison" class="glass-card p-6 rounded-2xl shadow-sm hidden">
+          <h3 class="font-bold text-slate-700 text-lg mb-4">💰 Debt Payoff Strategy Comparison</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+              <div class="flex items-center gap-2 mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
+                </svg>
+                <h4 class="font-bold text-blue-900">Avalanche (Highest APR First)</h4>
+              </div>
+              <div class="space-y-1 text-sm">
+                <p class="text-blue-800"><strong>Payoff:</strong> <span id="avalanche-payoff">-</span></p>
+                <p class="text-blue-800"><strong>Total Interest:</strong> <span id="avalanche-interest">-</span></p>
+                <p class="text-xs text-blue-600 mt-2">Minimizes total interest paid (mathematically optimal)</p>
+              </div>
+            </div>
+
+            <div class="p-4 bg-purple-50 rounded-lg border-2 border-purple-200">
+              <div class="flex items-center gap-2 mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11 4a1 1 0 10-2 0v4a1 1 0 102 0V7zm-3 1a1 1 0 10-2 0v3a1 1 0 102 0V8zM8 9a1 1 0 00-2 0v2a1 1 0 102 0V9z" clip-rule="evenodd" />
+                </svg>
+                <h4 class="font-bold text-purple-900">Snowball (Smallest Balance First)</h4>
+              </div>
+              <div class="space-y-1 text-sm">
+                <p class="text-purple-800"><strong>Payoff:</strong> <span id="snowball-payoff">-</span></p>
+                <p class="text-purple-800"><strong>Total Interest:</strong> <span id="snowball-interest">-</span></p>
+                <p class="text-xs text-purple-600 mt-2">Builds momentum with quick wins (psychologically motivating)</p>
+              </div>
+            </div>
+          </div>
+          <div id="strategy-recommendation" class="mt-4 p-3 bg-emerald-50 rounded-lg border border-emerald-200 text-sm text-emerald-800"></div>
+        </div>
+
         <div class="glass-card p-6 rounded-2xl shadow-sm h-80">
           <canvas id="payoffChart"></canvas>
         </div>
@@ -219,15 +255,23 @@
         freq: el.querySelector('.bonus-freq').value
       }));
 
-      const resultWithBonuses = runDailySimulation(loans, bonuses, MAX_DAYS);
-      const resultBaseline = runDailySimulation(loans, [], MAX_DAYS);
+      // Run main simulation (Avalanche method - highest APR first)
+      const resultWithBonuses = runDailySimulation(loans, bonuses, MAX_DAYS, 'avalanche');
+      const resultBaseline = runDailySimulation(loans, [], MAX_DAYS, 'avalanche');
+
+      // Run comparison if multiple loans
+      let snowballResult = null;
+      if (loans.length > 1) {
+        snowballResult = runDailySimulation(loans, bonuses, MAX_DAYS, 'snowball');
+      }
 
       renderView(
         resultWithBonuses.monthlySchedule,
         resultWithBonuses.totalInterest,
         resultBaseline.totalInterest,
         resultWithBonuses.chartData,
-        resultWithBonuses.meta
+        resultWithBonuses.meta,
+        snowballResult
       );
     }
 
@@ -239,7 +283,7 @@
     function addOneMonth(dateObj) {
       return new Date(dateObj.getFullYear(), dateObj.getMonth() + 1, 1);
     }
-function runDailySimulation(loanData, bonuses, maxDays) {
+function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') {
   const simLoans = JSON.parse(JSON.stringify(loanData));
   const simBonuses = JSON.parse(JSON.stringify(bonuses));
 
@@ -393,8 +437,11 @@ function runDailySimulation(loanData, bonuses, maxDays) {
       if (bonus.daysUntilBonus === 0 && totalDebt() > BALANCE_EPSILON) {
         let remaining = bonus.amount;
 
-        // Apply to highest APR first
-        const sorted = [...simLoans].sort((a, b) => (b.apr || 0) - (a.apr || 0));
+        // Sort based on strategy: avalanche (highest APR) vs snowball (smallest balance)
+        const sorted = strategy === 'snowball'
+          ? [...simLoans].filter(l => l.balance > BALANCE_EPSILON).sort((a, b) => a.balance - b.balance)
+          : [...simLoans].sort((a, b) => (b.apr || 0) - (a.apr || 0));
+
         for (const loan of sorted) {
           if (remaining <= 0) break;
           if (loan.balance <= BALANCE_EPSILON) { loan.balance = 0; continue; }
@@ -471,7 +518,7 @@ function runDailySimulation(loanData, bonuses, maxDays) {
 }
 
 
-    function renderView(schedule, totalI, baselineI, chartData, payoffMeta) {
+    function renderView(schedule, totalI, baselineI, chartData, payoffMeta, snowballResult) {
       const lastRow = schedule[schedule.length - 1];
       const debtFreeText = payoffMeta?.warningMessage
         ? payoffMeta.warningMessage
@@ -506,6 +553,31 @@ function runDailySimulation(loanData, bonuses, maxDays) {
           <td class="p-4 text-right font-bold text-emerald-500">$${(row.bonus || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
         </tr>
       `).join('');
+
+      // Display strategy comparison if multiple loans
+      const comparisonBlock = document.getElementById('strategy-comparison');
+      if (snowballResult) {
+        document.getElementById('avalanche-payoff').innerText = payoffMeta?.payoffDate || 'Not paid off';
+        document.getElementById('avalanche-interest').innerText = `$${totalI.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+        document.getElementById('snowball-payoff').innerText = snowballResult.meta?.payoffDate || 'Not paid off';
+        document.getElementById('snowball-interest').innerText = `$${snowballResult.totalInterest.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+
+        const recommendation = document.getElementById('strategy-recommendation');
+        const interestDiff = Math.abs(totalI - snowballResult.totalInterest);
+        const avalancheBetter = totalI < snowballResult.totalInterest;
+
+        if (interestDiff < 100) {
+          recommendation.innerHTML = `<strong>🤝 Nearly Equal:</strong> Both strategies result in similar total interest (within $${interestDiff.toFixed(0)}). Choose based on personal preference.`;
+        } else if (avalancheBetter) {
+          recommendation.innerHTML = `<strong>💰 Avalanche Wins:</strong> Saves $${interestDiff.toLocaleString(undefined, { maximumFractionDigits: 0 })} in interest compared to Snowball. Mathematically optimal.`;
+        } else {
+          recommendation.innerHTML = `<strong>⚡ Snowball Advantage:</strong> Snowball saves $${interestDiff.toLocaleString(undefined, { maximumFractionDigits: 0 })} in this scenario (unusual - check your loan details).`;
+        }
+
+        comparisonBlock.classList.remove('hidden');
+      } else {
+        comparisonBlock.classList.add('hidden');
+      }
 
       const ctx = document.getElementById('payoffChart').getContext('2d');
       if (chartInstance) chartInstance.destroy();
