@@ -105,6 +105,28 @@
 
           <button id="add-bonus" class="mt-4 w-full py-2 border-2 border-dashed border-slate-300 rounded-xl text-slate-400 hover:border-emerald-400 hover:text-emerald-600 transition-all text-xs font-bold uppercase tracking-wider">+ Add Another Bonus</button>
         </section>
+
+        <!-- Scenarios Section -->
+        <section class="glass-card p-6 rounded-2xl shadow-sm">
+          <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+            </svg>
+            Saved Scenarios
+          </h2>
+
+          <div class="mb-4">
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Save Current As</label>
+            <div class="flex gap-2">
+              <input type="text" id="scenario-name" placeholder="e.g., Aggressive Payoff" class="flex-1 p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-purple-400 transition-all text-sm">
+              <button id="save-scenario" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all text-xs font-bold uppercase">Save</button>
+            </div>
+          </div>
+
+          <div id="scenarios-list" class="space-y-2 max-h-60 overflow-y-auto custom-scrollbar">
+            <p class="text-xs text-slate-400 text-center py-4">No saved scenarios yet</p>
+          </div>
+        </section>
       </div>
 
       <!-- Main Panel -->
@@ -503,7 +525,7 @@ function runDailySimulation(loanData, bonuses, maxDays) {
       const div = document.createElement('div');
       div.className = 'loan-item border-b border-slate-100 pb-4 last:border-0 relative pt-4';
       div.innerHTML = `
-        <button onclick="this.parentElement.remove(); calculate();" class="absolute right-0 top-0 text-slate-300 hover:text-red-500">×</button>
+        <button onclick="this.parentElement.remove(); calculate(); saveToLocalStorage();" class="absolute right-0 top-0 text-slate-300 hover:text-red-500 text-2xl leading-none">×</button>
         <div class="grid grid-cols-2 gap-3">
           <div class="col-span-2">
             <label class="block text-[10px] font-bold text-slate-400 uppercase">Balance</label>
@@ -528,6 +550,7 @@ function runDailySimulation(loanData, bonuses, maxDays) {
       `;
       container.appendChild(div);
       calculate();
+      saveToLocalStorage();
     });
 
     document.getElementById('add-bonus').addEventListener('click', () => {
@@ -535,7 +558,7 @@ function runDailySimulation(loanData, bonuses, maxDays) {
       const div = document.createElement('div');
       div.className = 'bonus-item border-b border-slate-100 pb-4 last:border-0 relative pt-4';
       div.innerHTML = `
-        <button onclick="this.parentElement.remove(); calculate();" class="absolute right-0 top-0 text-slate-300 hover:text-red-500">×</button>
+        <button onclick="this.parentElement.remove(); calculate(); saveToLocalStorage();" class="absolute right-0 top-0 text-slate-300 hover:text-red-500 text-2xl leading-none">×</button>
         <div class="grid grid-cols-2 gap-3">
           <div class="col-span-2">
             <label class="block text-[10px] font-bold text-slate-400 uppercase">Label</label>
@@ -558,10 +581,225 @@ function runDailySimulation(loanData, bonuses, maxDays) {
       `;
       container.appendChild(div);
       calculate();
+      saveToLocalStorage();
     });
 
-    document.body.addEventListener('input', calculate);
-    window.onload = calculate;
+    // ============ SCENARIO MANAGEMENT ============
+    function getAllScenarios() {
+      const saved = localStorage.getItem('studentLoanScenarios');
+      return saved ? JSON.parse(saved) : {};
+    }
+
+    function saveScenario(name) {
+      if (!name || !name.trim()) {
+        alert('Please enter a scenario name');
+        return;
+      }
+
+      const scenarios = getAllScenarios();
+      const data = getCurrentData();
+      scenarios[name.trim()] = {
+        ...data,
+        savedAt: new Date().toISOString()
+      };
+
+      localStorage.setItem('studentLoanScenarios', JSON.stringify(scenarios));
+      renderScenariosList();
+      document.getElementById('scenario-name').value = '';
+    }
+
+    function loadScenario(name) {
+      const scenarios = getAllScenarios();
+      const scenario = scenarios[name];
+      if (!scenario) return;
+
+      applyDataToUI(scenario);
+      calculate();
+      saveToLocalStorage();
+    }
+
+    function deleteScenario(name) {
+      if (!confirm(`Delete scenario "${name}"?`)) return;
+
+      const scenarios = getAllScenarios();
+      delete scenarios[name];
+      localStorage.setItem('studentLoanScenarios', JSON.stringify(scenarios));
+      renderScenariosList();
+    }
+
+    function renderScenariosList() {
+      const scenarios = getAllScenarios();
+      const list = document.getElementById('scenarios-list');
+
+      if (Object.keys(scenarios).length === 0) {
+        list.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">No saved scenarios yet</p>';
+        return;
+      }
+
+      list.innerHTML = Object.entries(scenarios).map(([name, data]) => {
+        const date = new Date(data.savedAt).toLocaleDateString();
+        return `
+          <div class="p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-all">
+            <div class="flex items-center justify-between">
+              <div class="flex-1 cursor-pointer" onclick="loadScenario('${name.replace(/'/g, "\\'")}')">
+                <div class="font-semibold text-sm text-slate-700">${name}</div>
+                <div class="text-[10px] text-slate-400">${date} • ${data.loans.length} loan(s)</div>
+              </div>
+              <button onclick="deleteScenario('${name.replace(/'/g, "\\'")}'); event.stopPropagation();" class="ml-2 text-slate-400 hover:text-red-500 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function getCurrentData() {
+      const loans = Array.from(document.querySelectorAll('.loan-item')).map(el => ({
+        balance: el.querySelector('.loan-balance').value,
+        apr: el.querySelector('.loan-apr').value,
+        payment: el.querySelector('.loan-pay').value,
+        freq: el.querySelector('.loan-pay-freq').value
+      }));
+
+      const bonuses = Array.from(document.querySelectorAll('.bonus-item')).map(el => ({
+        label: el.querySelector('.bonus-label').value,
+        amount: el.querySelector('.bonus-amount').value,
+        freq: el.querySelector('.bonus-freq').value
+      }));
+
+      return { loans, bonuses };
+    }
+
+    function applyDataToUI(data) {
+      const loanContainer = document.getElementById('loan-container');
+      const bonusContainer = document.getElementById('bonus-container');
+      loanContainer.innerHTML = '';
+      bonusContainer.innerHTML = '';
+
+      // Restore loans
+      data.loans.forEach((loan, index) => {
+        const div = document.createElement('div');
+        div.className = 'loan-item border-b border-slate-100 pb-4 last:border-0 relative' + (index > 0 ? ' pt-4' : '');
+        div.innerHTML = `
+          ${index > 0 ? '<button onclick="this.parentElement.remove(); calculate(); saveToLocalStorage();" class="absolute right-0 top-0 text-slate-300 hover:text-red-500 text-2xl leading-none">×</button>' : ''}
+          <div class="grid grid-cols-2 gap-3">
+            <div class="col-span-2">
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Current Balance ($)</label>
+              <input type="number" class="loan-balance w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-400 transition-all" value="${loan.balance}" step="100">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">APR (%)</label>
+              <input type="number" class="loan-apr w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-400 transition-all" value="${loan.apr}" step="0.1">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Payment Amount</label>
+              <input type="number" class="loan-pay w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-400 transition-all" value="${loan.payment}" step="5">
+            </div>
+            <div class="col-span-2">
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Payment Frequency</label>
+              <select class="loan-pay-freq w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-400 transition-all">
+                <option value="biweekly" ${loan.freq === 'biweekly' ? 'selected' : ''}>Bi-Weekly</option>
+                <option value="monthly" ${loan.freq === 'monthly' ? 'selected' : ''}>Monthly</option>
+              </select>
+            </div>
+          </div>
+        `;
+        loanContainer.appendChild(div);
+      });
+
+      // Restore bonuses
+      data.bonuses.forEach((bonus, index) => {
+        const div = document.createElement('div');
+        div.className = 'bonus-item border-b border-slate-100 pb-4 last:border-0 relative' + (index > 0 ? ' pt-4' : '');
+        div.innerHTML = `
+          ${index > 0 ? '<button onclick="this.parentElement.remove(); calculate(); saveToLocalStorage();" class="absolute right-0 top-0 text-slate-300 hover:text-red-500 text-2xl leading-none">×</button>' : ''}
+          <div class="grid grid-cols-2 gap-3">
+            <div class="col-span-2">
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Bonus Label</label>
+              <input type="text" class="bonus-label w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-400 transition-all" value="${bonus.label}">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Amount ($)</label>
+              <input type="number" class="bonus-amount w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-400 transition-all" value="${bonus.amount}">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Frequency</label>
+              <select class="bonus-freq w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-400 transition-all">
+                <option value="quarterly" ${bonus.freq === 'quarterly' ? 'selected' : ''}>Quarterly</option>
+                <option value="monthly" ${bonus.freq === 'monthly' ? 'selected' : ''}>Monthly</option>
+                <option value="biweekly" ${bonus.freq === 'biweekly' ? 'selected' : ''}>Bi-Weekly</option>
+                <option value="weekly" ${bonus.freq === 'weekly' ? 'selected' : ''}>Weekly</option>
+              </select>
+            </div>
+          </div>
+        `;
+        bonusContainer.appendChild(div);
+      });
+    }
+
+    // ============ LOCALSTORAGE PERSISTENCE ============
+    function saveToLocalStorage() {
+      const loans = Array.from(document.querySelectorAll('.loan-item')).map(el => ({
+        balance: el.querySelector('.loan-balance').value,
+        apr: el.querySelector('.loan-apr').value,
+        payment: el.querySelector('.loan-pay').value,
+        freq: el.querySelector('.loan-pay-freq').value
+      }));
+
+      const bonuses = Array.from(document.querySelectorAll('.bonus-item')).map(el => ({
+        label: el.querySelector('.bonus-label').value,
+        amount: el.querySelector('.bonus-amount').value,
+        freq: el.querySelector('.bonus-freq').value
+      }));
+
+      localStorage.setItem('studentLoanData', JSON.stringify({ loans, bonuses, savedAt: new Date().toISOString() }));
+    }
+
+    function loadFromLocalStorage() {
+      const saved = localStorage.getItem('studentLoanData');
+      if (!saved) return false;
+
+      try {
+        const data = JSON.parse(saved);
+        applyDataToUI(data);
+        return true;
+      } catch (e) {
+        console.error('Failed to load saved data:', e);
+        return false;
+      }
+    }
+
+    // Auto-save on every input
+    document.body.addEventListener('input', () => {
+      calculate();
+      saveToLocalStorage();
+    });
+
+    // Scenario button handlers
+    document.getElementById('save-scenario').addEventListener('click', () => {
+      const name = document.getElementById('scenario-name').value;
+      saveScenario(name);
+    });
+
+    document.getElementById('scenario-name').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const name = document.getElementById('scenario-name').value;
+        saveScenario(name);
+      }
+    });
+
+    // Load saved data on page load, then calculate
+    window.onload = () => {
+      const loaded = loadFromLocalStorage();
+      renderScenariosList();
+      calculate();
+      if (loaded) {
+        console.log('💾 Loaded saved loan data');
+      }
+    };
   </script>
 </body>
 </html>
