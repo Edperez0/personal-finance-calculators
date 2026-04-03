@@ -32,8 +32,21 @@
       /* Show bottom nav on mobile */
       .mobile-bottom-nav { display: flex !important; }
 
-      /* Add padding at bottom for fixed nav */
-      body { padding-bottom: 80px; }
+      /* Show mobile sticky summary */
+      .mobile-sticky-summary { display: flex !important; }
+
+      /* Hide desktop header on mobile */
+      header { display: none !important; }
+
+      /* Hide desktop sidebar layout */
+      .lg\:grid-cols-3 { grid-template-columns: 1fr !important; }
+      .lg\:col-span-2 { grid-column: span 1 !important; }
+
+      /* Add padding for sticky elements */
+      body {
+        padding-top: 60px; /* sticky summary */
+        padding-bottom: 80px; /* bottom nav */
+      }
 
       /* Bigger touch targets for inputs */
       input[type="text"], input[type="number"] {
@@ -41,26 +54,118 @@
         font-size: 1rem !important;
       }
 
-      /* Bigger delete buttons - always visible on mobile */
-      .delete-btn {
-        width: 44px !important;
-        height: 44px !important;
-        opacity: 1 !important;
+      /* Simplified mobile card layout */
+      .category-card-mobile {
+        display: block !important;
+        padding: 1rem !important;
+        position: relative;
+        touch-action: pan-y;
       }
 
-      /* Compact header */
-      header h1 { font-size: 1.5rem !important; }
+      .category-card-mobile .category-name {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .category-card-mobile .category-value {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* Toggle buttons for $/% */
+      .toggle-buttons {
+        display: inline-flex !important;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        border: 1px solid #cbd5e1;
+      }
+
+      .toggle-buttons button {
+        padding: 0.5rem 1.5rem;
+        border: none;
+        background: white;
+        color: #64748b;
+        font-weight: 600;
+        min-width: 60px;
+      }
+
+      .toggle-buttons button.active {
+        background: #3b82f6;
+        color: white;
+      }
+
+      /* Swipe to delete */
+      .swipe-container {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .swipe-content {
+        transition: transform 0.3s ease;
+        position: relative;
+        z-index: 2;
+        background: white;
+      }
+
+      .swipe-delete {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 80px;
+        background: #ef4444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+      }
+
+      /* Hide desktop elements */
+      .desktop-only { display: none !important; }
+
+      /* Mobile input card */
+      .mobile-input-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        border: 1px solid #e2e8f0;
+        margin-bottom: 1rem;
+      }
 
       /* Full-width Add New button */
-      .add-new-btn { width: 100% !important; }
+      .add-new-btn {
+        width: 100% !important;
+        justify-content: center !important;
+      }
     }
 
-    /* Hide bottom nav on desktop */
-    .mobile-bottom-nav { display: none; }
+    /* Hide mobile-only elements on desktop */
+    .mobile-bottom-nav,
+    .mobile-sticky-summary {
+      display: none;
+    }
   </style>
 </head>
 
 <body class="bg-slate-50 text-slate-900 font-sans">
+  <!-- Mobile Sticky Summary (hidden on desktop) -->
+  <div class="mobile-sticky-summary fixed top-0 left-0 right-0 bg-white border-b border-slate-200 shadow-sm z-40 px-4 py-3">
+    <div class="flex items-center justify-between text-sm">
+      <div>
+        <span class="text-slate-500 text-xs">Budget:</span>
+        <span id="mobile-budget-display" class="font-bold text-slate-800 ml-1">$0</span>
+      </div>
+      <div class="text-right">
+        <span class="text-slate-500 text-xs">Left:</span>
+        <span id="mobile-remaining-display" class="font-bold text-green-600 ml-1">$0</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Sticky Navigation Bar -->
   <nav class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
     <div class="max-w-5xl mx-auto px-4 md:px-8 py-4">
@@ -80,8 +185,25 @@
 
   <div class="p-4 md:p-8">
     <div id="app" class="max-w-5xl mx-auto">
-      <!-- Header -->
-      <header class="mb-8">
+      <!-- Mobile Input Card (shows first on mobile, hidden on desktop) -->
+      <div class="mobile-input-card md:hidden">
+        <label class="text-xs font-semibold uppercase text-slate-400 block mb-2">
+          Bi-Weekly After-Tax Pay
+        </label>
+        <div class="flex items-center">
+          <span class="text-2xl font-bold mr-2">$</span>
+          <input
+            type="number"
+            id="bi-weekly-input-mobile"
+            value="2500"
+            class="text-2xl font-bold focus:outline-none flex-1 bg-transparent"
+            oninput="syncBiWeeklyInputs('mobile'); updateUI(); saveState();"
+          />
+        </div>
+      </div>
+
+      <!-- Desktop Header (hidden on mobile) -->
+      <header class="mb-8 desktop-only">
         <div class="space-y-1">
           <h1 class="text-3xl font-bold tracking-tight text-slate-800">Budget Planner</h1>
           <div class="flex items-center gap-2 text-blue-600 font-semibold bg-blue-50 px-3 py-1 rounded-full w-fit">
@@ -133,7 +255,7 @@
               id="bi-weekly-input"
               value="2500"
               class="text-lg font-bold focus:outline-none w-32 bg-transparent"
-              oninput="updateUI(); saveState();"
+              oninput="syncBiWeeklyInputs('desktop'); updateUI(); saveState();"
             />
           </div>
         </div>
@@ -221,6 +343,49 @@
     ];
 
     let categories = [...DEFAULT_CATEGORIES];
+
+    // Sync bi-weekly inputs between mobile and desktop
+    function syncBiWeeklyInputs(source) {
+      const mobileInput = document.getElementById('bi-weekly-input-mobile');
+      const desktopInput = document.getElementById('bi-weekly-input');
+
+      if (source === 'mobile' && mobileInput && desktopInput) {
+        desktopInput.value = mobileInput.value;
+      } else if (source === 'desktop' && mobileInput && desktopInput) {
+        mobileInput.value = desktopInput.value;
+      }
+    }
+
+    // Update mobile sticky summary
+    function updateMobileSummary() {
+      const biWeekly = Number(document.getElementById("bi-weekly-input").value) || 0;
+      const netPay = (biWeekly * 26) / 12;
+
+      let totalSpent = 0;
+      categories.forEach((cat) => {
+        const cost = cat.type === "percent" ? (cat.value / 100) * netPay : cat.value;
+        totalSpent += cost;
+      });
+
+      const remaining = netPay - totalSpent;
+
+      const budgetDisplay = document.getElementById('mobile-budget-display');
+      const remainingDisplay = document.getElementById('mobile-remaining-display');
+
+      if (budgetDisplay) {
+        budgetDisplay.textContent = `$${Math.round(netPay).toLocaleString()}`;
+      }
+
+      if (remainingDisplay) {
+        remainingDisplay.textContent = `$${Math.round(remaining).toLocaleString()}`;
+        remainingDisplay.className = `font-bold ml-1 ${remaining < 0 ? 'text-red-500' : 'text-green-600'}`;
+      }
+    }
+
+    // Check if mobile viewport
+    function isMobile() {
+      return window.innerWidth < 768;
+    }
 
     function safeParseJSON(str) {
       try { return JSON.parse(str); } catch { return null; }
@@ -349,80 +514,184 @@
           ? '<div class="p-8 text-center text-slate-400">No categories added. Click "Add New" to get started.</div>'
           : "";
 
+      const mobile = isMobile();
+
       categories.forEach((cat) => {
-        const row = document.createElement("div");
-        row.className = "relative p-4 hover:bg-slate-50/50 transition-colors group";
-        row.setAttribute("draggable", "true");
-        row.dataset.id = cat.id;
-        row.addEventListener("dragstart", onDragStart);
-        row.addEventListener("dragend", onDragEnd);
-        row.addEventListener("dragover", onDragOver);
-        row.addEventListener("dragleave", onDragLeave);
-        row.addEventListener("drop", onDrop);
+        if (mobile) {
+          // Mobile: swipeable card with toggle buttons
+          const wrapper = document.createElement("div");
+          wrapper.className = "swipe-container";
+          wrapper.dataset.id = cat.id;
 
-        row.innerHTML = `
-          <span
-            class="absolute left-2 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none select-none"
-            aria-hidden="true"
-          >
-            <i data-lucide="grip-vertical" class="w-4 h-4"></i>
-          </span>
+          // Delete background
+          const deleteBtn = document.createElement("div");
+          deleteBtn.className = "swipe-delete";
+          deleteBtn.innerHTML = "Delete";
+          wrapper.appendChild(deleteBtn);
 
-          <button
-            onclick="removeCategory('${cat.id}')"
-            class="delete-btn absolute top-3 right-3 h-6 w-6 grid place-items-center rounded-md
-                   text-slate-300 hover:text-red-500 hover:bg-red-50
-                   opacity-0 group-hover:opacity-100 transition"
-            aria-label="Delete category"
-            title="Delete"
-          >
-            <span class="text-lg leading-none font-semibold">×</span>
-          </button>
+          // Swipeable content
+          const row = document.createElement("div");
+          row.className = "swipe-content relative p-4 bg-white border-b border-slate-100 category-card-mobile";
+          row.setAttribute("draggable", "true");
+          row.dataset.id = cat.id;
 
-          <div class="flex flex-wrap items-center gap-4 pr-10">
-            <div class="flex-grow min-w-[200px] pl-6">
-              <input type="text" value="${escapeHtml(cat.name)}"
-                placeholder="Category Name"
-                oninput="updateCategory('${cat.id}', 'name', this.value)"
-                class="w-full bg-transparent border-none focus:ring-0 font-medium text-slate-700 placeholder:text-slate-300 outline-none"
-              />
-            </div>
+          // Drag handlers (still work on mobile for reordering)
+          row.addEventListener("dragstart", onDragStart);
+          row.addEventListener("dragend", onDragEnd);
+          row.addEventListener("dragover", onDragOver);
+          row.addEventListener("dragleave", onDragLeave);
+          row.addEventListener("drop", onDrop);
 
-            <div class="ml-auto flex items-center bg-slate-100 rounded-2xl px-2 py-2 shadow-inner hover:bg-slate-200 transition-colors">
-              <input type="number" value="${Number(cat.value) || 0}"
-                oninput="updateCategory('${cat.id}', 'value', this.value)"
-                class="w-24 bg-white rounded-xl px-3 py-1.5 text-right font-semibold text-slate-900
-                       outline-none focus:ring-2 focus:ring-blue-500"
-              />
-
-              <div class="mx-2 h-6 w-px bg-slate-300"></div>
-
-              <div class="relative">
-                <select
-                  onchange="updateCategory('${cat.id}', 'type', this.value)"
-                  class="bg-transparent border-none text-sm font-semibold text-slate-700 pr-7 pl-1 outline-none cursor-pointer"
-                >
-                  <option value="fixed" ${cat.type === "fixed" ? "selected" : ""}>$</option>
-                  <option value="percent" ${cat.type === "percent" ? "selected" : ""}>%</option>
-                </select>
-
-                <svg class="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500"
-                     viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/>
-                </svg>
+          row.innerHTML = `
+            <div class="flex items-start justify-between mb-3">
+              <div class="flex items-center gap-2 flex-1">
+                <span class="text-slate-300">
+                  <i data-lucide="grip-vertical" class="w-5 h-5"></i>
+                </span>
+                <input type="text" value="${escapeHtml(cat.name)}"
+                  placeholder="Category Name"
+                  oninput="updateCategory('${cat.id}', 'name', this.value)"
+                  class="flex-1 bg-transparent border-none focus:ring-0 font-semibold text-slate-700 placeholder:text-slate-300 outline-none text-base"
+                />
+              </div>
+              <div class="text-right ml-2">
+                <p class="text-xs text-slate-400 uppercase font-bold">Cost</p>
+                <p id="cost-${cat.id}" class="font-mono text-sm font-bold text-slate-700">$0.00</p>
               </div>
             </div>
 
-            <div class="w-24 text-right">
-              <p class="text-xs text-slate-400 uppercase font-bold">Cost</p>
-              <p id="cost-${cat.id}" class="font-mono text-sm text-slate-600">$0.00</p>
+            <div class="flex items-center gap-3">
+              <input type="number" value="${Number(cat.value) || 0}"
+                oninput="updateCategory('${cat.id}', 'value', this.value)"
+                class="flex-1 bg-slate-50 rounded-lg px-4 py-3 text-left font-bold text-slate-900 border border-slate-200
+                       outline-none focus:ring-2 focus:ring-blue-500 text-base"
+              />
+              <div class="toggle-buttons" id="toggle-${cat.id}">
+                <button
+                  class="${cat.type === 'fixed' ? 'active' : ''}"
+                  onclick="updateCategory('${cat.id}', 'type', 'fixed')"
+                >$</button>
+                <button
+                  class="${cat.type === 'percent' ? 'active' : ''}"
+                  onclick="updateCategory('${cat.id}', 'type', 'percent')"
+                >%</button>
+              </div>
             </div>
-          </div>
-        `;
-        container.appendChild(row);
+          `;
+
+          wrapper.appendChild(row);
+
+          // Add swipe handlers
+          let startX = 0;
+          let currentX = 0;
+          let isSwiping = false;
+
+          row.addEventListener("touchstart", (e) => {
+            startX = e.touches[0].clientX;
+            isSwiping = true;
+          });
+
+          row.addEventListener("touchmove", (e) => {
+            if (!isSwiping) return;
+            currentX = e.touches[0].clientX;
+            const diff = startX - currentX;
+            if (diff > 0) {
+              row.style.transform = `translateX(-${Math.min(diff, 80)}px)`;
+            }
+          });
+
+          row.addEventListener("touchend", (e) => {
+            if (!isSwiping) return;
+            isSwiping = false;
+            const diff = startX - currentX;
+            if (diff > 60) {
+              // Swiped far enough - delete
+              row.style.transform = "translateX(-100%)";
+              setTimeout(() => removeCategory(cat.id), 300);
+            } else {
+              // Snap back
+              row.style.transform = "translateX(0)";
+            }
+          });
+
+          container.appendChild(wrapper);
+        } else {
+          // Desktop: original layout
+          const row = document.createElement("div");
+          row.className = "relative p-4 hover:bg-slate-50/50 transition-colors group";
+          row.setAttribute("draggable", "true");
+          row.dataset.id = cat.id;
+          row.addEventListener("dragstart", onDragStart);
+          row.addEventListener("dragend", onDragEnd);
+          row.addEventListener("dragover", onDragOver);
+          row.addEventListener("dragleave", onDragLeave);
+          row.addEventListener("drop", onDrop);
+
+          row.innerHTML = `
+            <span
+              class="absolute left-2 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none select-none"
+              aria-hidden="true"
+            >
+              <i data-lucide="grip-vertical" class="w-4 h-4"></i>
+            </span>
+
+            <button
+              onclick="removeCategory('${cat.id}')"
+              class="delete-btn absolute top-3 right-3 h-6 w-6 grid place-items-center rounded-md
+                     text-slate-300 hover:text-red-500 hover:bg-red-50
+                     opacity-0 group-hover:opacity-100 transition"
+              aria-label="Delete category"
+              title="Delete"
+            >
+              <span class="text-lg leading-none font-semibold">×</span>
+            </button>
+
+            <div class="flex flex-wrap items-center gap-4 pr-10">
+              <div class="flex-grow min-w-[200px] pl-6">
+                <input type="text" value="${escapeHtml(cat.name)}"
+                  placeholder="Category Name"
+                  oninput="updateCategory('${cat.id}', 'name', this.value)"
+                  class="w-full bg-transparent border-none focus:ring-0 font-medium text-slate-700 placeholder:text-slate-300 outline-none"
+                />
+              </div>
+
+              <div class="ml-auto flex items-center bg-slate-100 rounded-2xl px-2 py-2 shadow-inner hover:bg-slate-200 transition-colors">
+                <input type="number" value="${Number(cat.value) || 0}"
+                  oninput="updateCategory('${cat.id}', 'value', this.value)"
+                  class="w-24 bg-white rounded-xl px-3 py-1.5 text-right font-semibold text-slate-900
+                         outline-none focus:ring-2 focus:ring-blue-500"
+                />
+
+                <div class="mx-2 h-6 w-px bg-slate-300"></div>
+
+                <div class="relative">
+                  <select
+                    onchange="updateCategory('${cat.id}', 'type', this.value)"
+                    class="bg-transparent border-none text-sm font-semibold text-slate-700 pr-7 pl-1 outline-none cursor-pointer"
+                  >
+                    <option value="fixed" ${cat.type === "fixed" ? "selected" : ""}>$</option>
+                    <option value="percent" ${cat.type === "percent" ? "selected" : ""}>%</option>
+                  </select>
+
+                  <svg class="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500"
+                       viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="w-24 text-right">
+                <p class="text-xs text-slate-400 uppercase font-bold">Cost</p>
+                <p id="cost-${cat.id}" class="font-mono text-sm text-slate-600">$0.00</p>
+              </div>
+            </div>
+          `;
+          container.appendChild(row);
+        }
       });
 
       lucide.createIcons();
+      updateMobileSummary();
     }
 
     function updateUI() {
@@ -484,10 +753,13 @@
         badge.classList.add("hidden");
         alertBox.classList.add("hidden");
       }
+
+      updateMobileSummary();
     }
 
     window.onload = () => {
       loadState();
+      syncBiWeeklyInputs('desktop'); // Sync mobile input on load
       renderCategories();
       updateUI();
       lucide.createIcons();

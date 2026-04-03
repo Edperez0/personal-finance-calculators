@@ -24,11 +24,15 @@
       /* Hide top nav on mobile */
       nav.sticky { display: none; }
 
-      /* Show bottom nav on mobile */
-      .mobile-bottom-nav { display: flex !important; }
+      /* Show bottom nav and sticky summary on mobile */
+      .mobile-bottom-nav,
+      .mobile-sticky-summary { display: flex !important; }
 
-      /* Add padding at bottom for fixed nav */
-      body { padding-bottom: 80px; }
+      /* Add padding at top and bottom for fixed elements */
+      body {
+        padding-top: 60px;
+        padding-bottom: 80px;
+      }
 
       /* Bigger touch targets for inputs and selects */
       input[type="text"], input[type="number"], select {
@@ -48,12 +52,27 @@
       }
     }
 
-    /* Hide bottom nav on desktop */
-    .mobile-bottom-nav { display: none; }
+    /* Hide mobile elements on desktop */
+    .mobile-bottom-nav,
+    .mobile-sticky-summary { display: none; }
   </style>
 </head>
 
 <body class="bg-slate-50 text-slate-900 font-sans">
+  <!-- Mobile Sticky Summary (hidden on desktop) -->
+  <div class="mobile-sticky-summary fixed top-0 left-0 right-0 bg-white border-b border-slate-200 shadow-sm z-40 px-4 py-3">
+    <div class="flex items-center justify-between text-sm">
+      <div>
+        <span class="text-slate-500 text-xs">Debt-Free:</span>
+        <span id="mobile-payoff-display" class="font-bold text-slate-800 ml-1">-</span>
+      </div>
+      <div class="text-right">
+        <span class="text-slate-500 text-xs">Interest:</span>
+        <span id="mobile-interest-display" class="font-bold text-red-600 ml-1">$0</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Sticky Navigation Bar -->
   <nav class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
     <div class="max-w-5xl mx-auto px-4 md:px-8 py-4">
@@ -630,6 +649,12 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
           : `Not paid off within ${Math.floor(MAX_DAYS / 30)} months`);
       document.getElementById('stat-date').innerText = debtFreeText;
 
+      // Update mobile sticky summary
+      const mobilePayoffDisplay = document.getElementById('mobile-payoff-display');
+      if (mobilePayoffDisplay) {
+        mobilePayoffDisplay.textContent = debtFreeText;
+      }
+
       const warningBlock = document.getElementById('loan-warning-block');
       const warningList = document.getElementById('loan-warning-list');
       if (payoffMeta?.interestOnlyLoans?.length) {
@@ -645,6 +670,12 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
       document.getElementById('stat-interest').innerText = `$${totalI.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
       document.getElementById('stat-savings').innerText = `$${Math.max(0, baselineI - totalI).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
       document.getElementById('duration-tag').innerText = `${schedule.length} Months (${(schedule.length / 12).toFixed(1)} yrs)`;
+
+      // Update mobile interest display
+      const mobileInterestDisplay = document.getElementById('mobile-interest-display');
+      if (mobileInterestDisplay) {
+        mobileInterestDisplay.textContent = `$${Math.round(totalI).toLocaleString()}`;
+      }
 
       const tbody = document.getElementById('schedule-body');
       tbody.innerHTML = schedule.map(row => `

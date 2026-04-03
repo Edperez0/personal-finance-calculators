@@ -23,8 +23,14 @@
       /* Show bottom nav on mobile */
       .mobile-bottom-nav { display: flex !important; }
 
-      /* Add padding at bottom for fixed nav */
-      body { padding-bottom: 80px; }
+      /* Show mobile sticky summary */
+      .mobile-sticky-summary { display: flex !important; }
+
+      /* Add padding at top and bottom for fixed elements */
+      body {
+        padding-top: 60px;
+        padding-bottom: 80px;
+      }
 
       /* Bigger touch targets for inputs */
       input[type="text"], input[type="number"] {
@@ -44,13 +50,34 @@
 
       /* Full-width Add Category button */
       .add-category-btn { width: 100% !important; }
+
+      /* Hide table on mobile */
+      table { display: none !important; }
+
+      /* Show mobile card layout */
+      .mobile-card-container { display: block !important; }
     }
 
-    /* Hide bottom nav on desktop */
-    .mobile-bottom-nav { display: none; }
+    /* Hide mobile elements on desktop */
+    .mobile-bottom-nav,
+    .mobile-sticky-summary,
+    .mobile-card-container { display: none; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans">
+  <!-- Mobile Sticky Summary (hidden on desktop) -->
+  <div class="mobile-sticky-summary fixed top-0 left-0 right-0 bg-white border-b border-slate-200 shadow-sm z-40 px-4 py-3">
+    <div class="flex items-center justify-between text-sm">
+      <div>
+        <span class="text-slate-500 text-xs">Bonus:</span>
+        <span id="mobile-bonus-display" class="font-bold text-slate-800 ml-1">$0</span>
+      </div>
+      <div class="text-right">
+        <span id="mobile-status-display" class="font-bold text-slate-600 text-xs">0% allocated</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Sticky Navigation Bar -->
   <nav class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
     <div class="max-w-5xl mx-auto px-4 md:px-8 py-4">
@@ -131,6 +158,11 @@
           </tfoot>
         </table>
       </div>
+
+      <!-- Mobile Card Layout -->
+      <div id="mobile-card-container" class="mobile-card-container divide-y divide-slate-100">
+        <!-- Mobile cards injected here -->
+      </div>
     </div>
   </div>
   </div>
@@ -172,6 +204,38 @@
     ];
 
     let allocations = [...DEFAULT_ALLOCATIONS];
+
+    function isMobile() {
+      return window.innerWidth < 768;
+    }
+
+    function updateMobileSummary() {
+      const commission = Number(document.getElementById('commission-input').value) || 0;
+      let totalPercent = 0;
+      allocations.forEach(item => totalPercent += item.percent);
+
+      const bonusDisplay = document.getElementById('mobile-bonus-display');
+      const statusDisplay = document.getElementById('mobile-status-display');
+
+      if (bonusDisplay) {
+        bonusDisplay.textContent = `$${Math.round(commission).toLocaleString()}`;
+      }
+
+      if (statusDisplay) {
+        const diff = Math.round((totalPercent - 100) * 100) / 100;
+        const absDiff = Math.abs(diff);
+        if (absDiff < 0.01) {
+          statusDisplay.textContent = '100% allocated ✓';
+          statusDisplay.className = 'font-bold text-green-600 text-xs';
+        } else if (diff < 0) {
+          statusDisplay.textContent = `${Math.abs(diff).toFixed(0)}% remaining`;
+          statusDisplay.className = 'font-bold text-amber-600 text-xs';
+        } else {
+          statusDisplay.textContent = `Over by ${diff.toFixed(0)}%`;
+          statusDisplay.className = 'font-bold text-red-600 text-xs';
+        }
+      }
+    }
 
     function safeParseJSON(str) {
       try { return JSON.parse(str); } catch { return null; }
@@ -308,6 +372,7 @@
     }
 
     function renderRows() {
+      // Render desktop table
       const tbody = document.getElementById('allocation-body');
       tbody.innerHTML = '';
 
@@ -315,69 +380,140 @@
         const emptyRow = document.createElement('tr');
         emptyRow.innerHTML = '<td class="px-4 py-6 text-slate-400" colspan="4">No categories yet. Click "Add Category" to get started.</td>';
         tbody.appendChild(emptyRow);
-        return;
+      } else {
+        allocations.forEach((item) => {
+          const row = document.createElement('tr');
+          row.setAttribute('draggable', 'true');
+          row.dataset.id = item.id;
+          row.addEventListener('dragstart', onDragStart);
+          row.addEventListener('dragend', onDragEnd);
+          row.addEventListener('dragover', onDragOver);
+          row.addEventListener('dragleave', onDragLeave);
+          row.addEventListener('drop', onDrop);
+
+          row.innerHTML = `
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-3">
+                <span
+                  class="text-slate-200"
+                  title="Drag to reorder (display only)"
+                  aria-label="Drag to reorder (display only)"
+                >
+                  <i data-lucide="grip-vertical" class="w-4 h-4"></i>
+                </span>
+                <input
+                  type="text"
+                  value="${escapeHtml(item.name)}"
+                  placeholder="Category Name"
+                  oninput="updateName('${item.id}', this.value)"
+                  class="w-full bg-transparent border-none focus:ring-0 font-semibold text-slate-700 placeholder:text-slate-300 outline-none"
+                />
+              </div>
+            </td>
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-2">
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  value="${item.percent}"
+                  class="w-24 bg-transparent border border-slate-200 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  oninput="updatePercent('${item.id}', this.value)"
+                />
+                <span class="text-slate-500">%</span>
+              </div>
+            </td>
+            <td class="px-4 py-3 font-semibold text-slate-700" id="amount-${item.id}">$0.00</td>
+            <td class="px-4 py-3 text-right">
+              <button
+                onclick="removeAllocation('${item.id}')"
+                class="h-7 w-7 inline-flex items-center justify-center rounded-md text-slate-300 hover:text-red-500 hover:bg-red-50 transition"
+                aria-label="Delete category"
+                title="Delete"
+              >
+                <span class="text-sm leading-none font-semibold">×</span>
+              </button>
+            </td>
+          `;
+
+          tbody.appendChild(row);
+        });
       }
 
-      allocations.forEach((item) => {
-        const row = document.createElement('tr');
-        row.setAttribute('draggable', 'true');
-        row.dataset.id = item.id;
-        row.addEventListener('dragstart', onDragStart);
-        row.addEventListener('dragend', onDragEnd);
-        row.addEventListener('dragover', onDragOver);
-        row.addEventListener('dragleave', onDragLeave);
-        row.addEventListener('drop', onDrop);
+      // Render mobile cards
+      const mobileContainer = document.getElementById('mobile-card-container');
+      if (mobileContainer) {
+        mobileContainer.innerHTML = '';
 
-        row.innerHTML = `
-          <td class="px-4 py-3">
-            <div class="flex items-center gap-3">
-              <span
-                class="text-slate-200"
-                title="Drag to reorder (display only)"
-                aria-label="Drag to reorder (display only)"
-              >
-                <i data-lucide="grip-vertical" class="w-4 h-4"></i>
-              </span>
-              <input
-                type="text"
-                value="${escapeHtml(item.name)}"
-                placeholder="Category Name"
-                oninput="updateName('${item.id}', this.value)"
-                class="w-full bg-transparent border-none focus:ring-0 font-semibold text-slate-700 placeholder:text-slate-300 outline-none"
-              />
-            </div>
-          </td>
-          <td class="px-4 py-3">
-            <div class="flex items-center gap-2">
-              <input
-                type="number"
-                min="0"
-                max="100"
-                step="0.01"
-                value="${item.percent}"
-                class="w-24 bg-transparent border border-slate-200 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                oninput="updatePercent('${item.id}', this.value)"
-              />
-              <span class="text-slate-500">%</span>
-            </div>
-          </td>
-          <td class="px-4 py-3 font-semibold text-slate-700" id="amount-${item.id}">$0.00</td>
-          <td class="px-4 py-3 text-right">
-            <button
-              onclick="removeAllocation('${item.id}')"
-              class="h-7 w-7 inline-flex items-center justify-center rounded-md text-slate-300 hover:text-red-500 hover:bg-red-50 transition"
-              aria-label="Delete category"
-              title="Delete"
-            >
-              <span class="text-sm leading-none font-semibold">×</span>
-            </button>
-          </td>
-        `;
+        if (allocations.length === 0) {
+          mobileContainer.innerHTML = '<div class="p-8 text-center text-slate-400">No categories yet. Click "Add Category" to get started.</div>';
+        } else {
+          allocations.forEach((item) => {
+            const card = document.createElement('div');
+            card.className = 'p-4 bg-white relative';
+            card.setAttribute('draggable', 'true');
+            card.dataset.id = item.id;
+            card.addEventListener('dragstart', onDragStart);
+            card.addEventListener('dragend', onDragEnd);
+            card.addEventListener('dragover', onDragOver);
+            card.addEventListener('dragleave', onDragLeave);
+            card.addEventListener('drop', onDrop);
 
-        tbody.appendChild(row);
-      });
+            card.innerHTML = `
+              <div class="flex items-start justify-between mb-3">
+                <div class="flex items-center gap-2 flex-1">
+                  <span class="text-slate-300">
+                    <i data-lucide="grip-vertical" class="w-5 h-5"></i>
+                  </span>
+                  <input
+                    type="text"
+                    value="${escapeHtml(item.name)}"
+                    placeholder="Category Name"
+                    oninput="updateName('${item.id}', this.value)"
+                    class="flex-1 bg-transparent border-none focus:ring-0 font-semibold text-slate-700 placeholder:text-slate-300 outline-none text-base"
+                  />
+                </div>
+                <button
+                  onclick="removeAllocation('${item.id}')"
+                  class="delete-btn flex-shrink-0 h-9 w-9 inline-flex items-center justify-center rounded-md text-slate-400 hover:text-red-500 hover:bg-red-50 transition"
+                  aria-label="Delete category"
+                  title="Delete"
+                >
+                  <span class="text-xl leading-none font-semibold">×</span>
+                </button>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <div class="flex-1">
+                  <label class="text-xs text-slate-400 uppercase font-bold block mb-1">Percentage</label>
+                  <div class="flex items-center gap-2">
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      step="0.01"
+                      value="${item.percent}"
+                      class="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-left font-bold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                      oninput="updatePercent('${item.id}', this.value)"
+                    />
+                    <span class="text-slate-500 font-semibold">%</span>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <label class="text-xs text-slate-400 uppercase font-bold block mb-1">Amount</label>
+                  <p id="mobile-amount-${item.id}" class="font-mono text-base font-bold text-slate-700">$0.00</p>
+                </div>
+              </div>
+            `;
+
+            mobileContainer.appendChild(card);
+          });
+        }
+      }
 
       lucide.createIcons();
+      updateMobileSummary();
     }
 
     function updateCommission() {
@@ -391,6 +527,8 @@
         totalPercent += item.percent;
         const amount = (commission * item.percent) / 100;
         totalAmount += amount;
+
+        // Update desktop table
         const amountCell = document.getElementById(`amount-${item.id}`);
         if (amountCell) {
           const amountText = formatCurrency(amount);
@@ -399,6 +537,12 @@
           } else {
             amountCell.textContent = amountText;
           }
+        }
+
+        // Update mobile cards
+        const mobileAmountCell = document.getElementById(`mobile-amount-${item.id}`);
+        if (mobileAmountCell) {
+          mobileAmountCell.textContent = formatCurrency(amount);
         }
       });
 
@@ -426,6 +570,8 @@
           }
         }
       }
+
+      updateMobileSummary();
     }
 
     loadState();
