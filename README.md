@@ -89,7 +89,7 @@ Hamburger menu (☰) in the top-right corner lets you switch between all three c
 That's it! No installation, no setup, no accounts needed.
 
 ### Step 2: Navigate Between Calculators
-- Click the **hamburger menu (☰)** in the top-right corner
+- Click the **Pills** in the menu bar
 - Select which calculator you want to use:
   - Budget Planner
   - Commission Breakdown  
