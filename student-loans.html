@@ -8,23 +8,27 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
-    .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(226, 232, 240, 0.8); }
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
   </style>
 </head>
 
-<body class="p-4 md:p-8">
+<body class="bg-slate-50 p-4 md:p-8 text-slate-900 font-sans">
   <div class="max-w-6xl mx-auto">
     <input id="debug-toggle" type="checkbox" class="hidden" aria-hidden="true">
     <!-- Header -->
-    <header class="mb-8 flex flex-col md:flex-row md:items-start justify-between gap-4 relative">
-      <div>
-        <h1 class="text-3xl font-bold text-slate-900">Student Loan Payoff Certainty</h1>
-        <p class="text-slate-500">Daily interest accrual with accurate bi-weekly vs monthly payment comparison.</p>
+    <header class="mb-8 flex flex-col md:flex-row md:items-start justify-between gap-6 relative">
+      <div class="space-y-1">
+        <h1 class="text-3xl font-bold tracking-tight text-slate-800">Student Loan Payoff</h1>
+        <p class="text-slate-500 pt-1 text-sm">Calculate your loan payoff timeline with accurate interest calculations.</p>
       </div>
 
       <div class="relative flex items-start">
@@ -65,8 +69,8 @@
       <div class="lg:col-span-1 space-y-6">
 
         <!-- Loans Input -->
-        <section class="glass-card p-6 rounded-2xl shadow-sm">
-          <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <h2 class="text-lg font-bold mb-4 text-slate-800 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
               <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12V11.23a4.002 4.002 0 003.076 3.883l3.228 1.384a1 1 0 00.788 0l3.228-1.384a4.002 4.002 0 003.076-3.883V10.12l1.69-.723a1 1 0 000-1.838l-7-3a1 1 0 00-.788 0l-7 3a1 1 0 000 1.838l1.69.723z" />
             </svg>
@@ -78,22 +82,22 @@
               <div class="grid grid-cols-2 gap-3">
                 <div class="col-span-2">
                   <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Current Balance ($)</label>
-                  <input type="number" class="loan-balance w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-400 transition-all" value="30000" step="100">
+                  <input type="number" class="loan-balance w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="30000" step="100">
                 </div>
 
                 <div>
                   <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">APR (%)</label>
-                  <input type="number" class="loan-apr w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-400 transition-all" value="5.5" step="0.1">
+                  <input type="number" class="loan-apr w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="5.5" step="0.1">
                 </div>
 
                 <div>
                   <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Payment Amount</label>
-                  <input type="number" class="loan-pay w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-400 transition-all" value="175" step="5">
+                  <input type="number" class="loan-pay w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="175" step="5">
                 </div>
 
                 <div class="col-span-2">
                   <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Payment Frequency</label>
-                  <select class="loan-pay-freq w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-400 transition-all">
+                  <select class="loan-pay-freq w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                     <option value="biweekly" selected>Bi-Weekly</option>
                     <option value="monthly">Monthly</option>
                   </select>
@@ -102,12 +106,12 @@
             </div>
           </div>
 
-          <button id="add-loan" class="mt-4 w-full py-2 border-2 border-dashed border-slate-300 rounded-xl text-slate-400 hover:border-blue-400 hover:text-blue-500 transition-all text-xs font-bold uppercase tracking-wider">+ Add Another Loan</button>
+          <button id="add-loan" class="mt-4 w-full py-2 border-2 border-dashed border-slate-300 rounded-xl text-slate-400 hover:border-blue-600 hover:text-blue-600 transition-all text-xs font-bold uppercase tracking-wider">+ Add Another Loan</button>
         </section>
 
         <!-- Bonus Section -->
-        <section class="glass-card p-6 rounded-2xl shadow-sm">
-          <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <h2 class="text-lg font-bold mb-4 text-slate-800 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-600" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
             </svg>
@@ -119,15 +123,15 @@
               <div class="grid grid-cols-2 gap-3">
                 <div class="col-span-2">
                   <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Bonus Label</label>
-                  <input type="text" class="bonus-label w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-400 transition-all" value="Quarterly Bonus">
+                  <input type="text" class="bonus-label w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="Quarterly Bonus">
                 </div>
                 <div>
                   <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Amount ($)</label>
-                  <input type="number" class="bonus-amount w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-400 transition-all" value="500">
+                  <input type="number" class="bonus-amount w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="500">
                 </div>
                 <div>
                   <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Frequency</label>
-                  <select class="bonus-freq w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-400 transition-all">
+                  <select class="bonus-freq w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                     <option value="quarterly" selected>Quarterly</option>
                     <option value="monthly">Monthly</option>
                     <option value="biweekly">Bi-Weekly</option>
@@ -138,12 +142,12 @@
             </div>
           </div>
 
-          <button id="add-bonus" class="mt-4 w-full py-2 border-2 border-dashed border-slate-300 rounded-xl text-slate-400 hover:border-emerald-400 hover:text-emerald-600 transition-all text-xs font-bold uppercase tracking-wider">+ Add Another Bonus</button>
+          <button id="add-bonus" class="mt-4 w-full py-2 border-2 border-dashed border-slate-300 rounded-xl text-slate-400 hover:border-blue-600 hover:text-blue-600 transition-all text-xs font-bold uppercase tracking-wider">+ Add Another Bonus</button>
         </section>
 
         <!-- Scenarios Section -->
-        <section class="glass-card p-6 rounded-2xl shadow-sm">
-          <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <h2 class="text-lg font-bold mb-4 text-slate-800 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600" viewBox="0 0 20 20" fill="currentColor">
               <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
             </svg>
@@ -153,7 +157,7 @@
           <div class="mb-4">
             <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Save Current As</label>
             <div class="flex gap-2">
-              <input type="text" id="scenario-name" placeholder="e.g., Aggressive Payoff" class="flex-1 p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-purple-400 transition-all text-sm">
+              <input type="text" id="scenario-name" placeholder="e.g., Aggressive Payoff" class="flex-1 p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm">
               <button id="save-scenario" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all text-xs font-bold uppercase">Save</button>
             </div>
           </div>
@@ -167,29 +171,50 @@
       <!-- Main Panel -->
       <div class="lg:col-span-2 space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="glass-card p-5 rounded-2xl shadow-sm border-l-4 border-blue-500">
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Debt-Free Date</p>
-            <p id="stat-date" class="text-2xl font-bold text-slate-800">Calculating...</p>
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex items-center gap-4">
+            <div class="bg-blue-100 p-2 rounded-lg text-blue-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase text-slate-400 tracking-tight">Debt-Free Date</p>
+              <p id="stat-date" class="text-lg font-bold text-slate-800">Calculating...</p>
+            </div>
           </div>
-          <div class="glass-card p-5 rounded-2xl shadow-sm border-l-4 border-slate-400">
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Interest</p>
-            <p id="stat-interest" class="text-2xl font-bold text-slate-800">$0</p>
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex items-center gap-4">
+            <div class="bg-red-100 p-2 rounded-lg text-red-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase text-slate-400 tracking-tight">Total Interest</p>
+              <p id="stat-interest" class="text-lg font-bold text-slate-800">$0</p>
+            </div>
           </div>
-          <div class="glass-card p-5 rounded-2xl shadow-sm border-l-4 border-emerald-500">
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Interest Saved</p>
-            <p id="stat-savings" class="text-2xl font-bold text-emerald-600">$0</p>
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex items-center gap-4">
+            <div class="bg-green-100 p-2 rounded-lg text-green-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase text-slate-400 tracking-tight">Interest Saved</p>
+              <p id="stat-savings" class="text-lg font-bold text-green-600">$0</p>
+            </div>
           </div>
         </div>
 
-        <div id="loan-warning-block" class="glass-card p-4 rounded-2xl shadow-sm border border-amber-200 bg-amber-50/60 hidden">
+        <div id="loan-warning-block" class="bg-white p-4 rounded-2xl shadow-sm border border-amber-200 bg-amber-50/60 hidden">
           <p class="text-[10px] font-bold text-amber-700 uppercase tracking-widest">Payment Warning</p>
           <p class="text-sm text-amber-800 mt-1">These loans are interest-only or negatively amortizing:</p>
           <ul id="loan-warning-list" class="text-xs text-amber-800 mt-2 list-disc pl-4"></ul>
         </div>
 
         <!-- Snowball vs Avalanche Comparison -->
-        <div id="strategy-comparison" class="glass-card p-6 rounded-2xl shadow-sm hidden">
-          <h3 class="font-bold text-slate-700 text-lg mb-4">💰 Debt Payoff Strategy Comparison</h3>
+        <div id="strategy-comparison" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 hidden">
+          <h3 class="text-lg font-bold text-slate-800 mb-4">💰 Debt Payoff Strategy Comparison</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
               <div class="flex items-center gap-2 mb-2">
@@ -223,13 +248,13 @@
           <div id="strategy-recommendation" class="mt-4 p-3 bg-emerald-50 rounded-lg border border-emerald-200 text-sm text-emerald-800"></div>
         </div>
 
-        <div class="glass-card p-6 rounded-2xl shadow-sm h-80">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 h-80">
           <canvas id="payoffChart"></canvas>
         </div>
 
-        <div class="glass-card rounded-2xl shadow-sm overflow-hidden">
-          <div class="p-4 border-b bg-slate-50/50 flex justify-between items-center flex-wrap gap-2">
-            <h3 class="font-bold text-slate-700 text-sm">Monthly Projected Schedule</h3>
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+          <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center flex-wrap gap-2">
+            <h3 class="font-semibold text-slate-700">Monthly Projected Schedule</h3>
             <div class="flex gap-2 items-center">
               <button id="export-csv" class="px-3 py-1 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all text-xs font-bold uppercase flex items-center gap-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -815,19 +840,19 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
           <div class="grid grid-cols-2 gap-3">
             <div class="col-span-2">
               <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Current Balance ($)</label>
-              <input type="number" class="loan-balance w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-400 transition-all" value="${loan.balance}" step="100">
+              <input type="number" class="loan-balance w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="${loan.balance}" step="100">
             </div>
             <div>
               <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">APR (%)</label>
-              <input type="number" class="loan-apr w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-400 transition-all" value="${loan.apr}" step="0.1">
+              <input type="number" class="loan-apr w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="${loan.apr}" step="0.1">
             </div>
             <div>
               <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Payment Amount</label>
-              <input type="number" class="loan-pay w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-400 transition-all" value="${loan.payment}" step="5">
+              <input type="number" class="loan-pay w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="${loan.payment}" step="5">
             </div>
             <div class="col-span-2">
               <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Payment Frequency</label>
-              <select class="loan-pay-freq w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-400 transition-all">
+              <select class="loan-pay-freq w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                 <option value="biweekly" ${loan.freq === 'biweekly' ? 'selected' : ''}>Bi-Weekly</option>
                 <option value="monthly" ${loan.freq === 'monthly' ? 'selected' : ''}>Monthly</option>
               </select>
@@ -846,15 +871,15 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
           <div class="grid grid-cols-2 gap-3">
             <div class="col-span-2">
               <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Bonus Label</label>
-              <input type="text" class="bonus-label w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-400 transition-all" value="${bonus.label}">
+              <input type="text" class="bonus-label w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="${bonus.label}">
             </div>
             <div>
               <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Amount ($)</label>
-              <input type="number" class="bonus-amount w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-400 transition-all" value="${bonus.amount}">
+              <input type="number" class="bonus-amount w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="${bonus.amount}">
             </div>
             <div>
               <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Frequency</label>
-              <select class="bonus-freq w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-400 transition-all">
+              <select class="bonus-freq w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                 <option value="quarterly" ${bonus.freq === 'quarterly' ? 'selected' : ''}>Quarterly</option>
                 <option value="monthly" ${bonus.freq === 'monthly' ? 'selected' : ''}>Monthly</option>
                 <option value="biweekly" ${bonus.freq === 'biweekly' ? 'selected' : ''}>Bi-Weekly</option>
