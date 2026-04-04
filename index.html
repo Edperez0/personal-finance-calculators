@@ -137,6 +137,13 @@
         min-height: auto !important;
       }
 
+      /* Pay frequency toggle buttons - compact sizing */
+      .mobile-input-card button[id*="freq"],
+      .bg-white.p-4.rounded-xl button[id*="freq"] {
+        min-height: auto !important;
+        padding: clamp(8px, 2vw, 10px) clamp(12px, 3vw, 14px) !important;
+      }
+
       .mobile-input-card {
         background: white;
         border-radius: clamp(12px, 3vw, 16px);
@@ -331,10 +338,10 @@
     <div id="app" class="max-w-5xl mx-auto">
       <!-- Mobile Input Card (shows first on mobile, hidden on desktop) -->
       <div class="mobile-input-card md:hidden">
-        <label class="text-xs font-semibold uppercase text-slate-400 block mb-2">
+        <label id="mobile-pay-label" class="text-xs font-semibold uppercase text-slate-400 block mb-2">
           Bi-Weekly After-Tax Pay
         </label>
-        <div class="flex items-center">
+        <div class="flex items-center mb-3">
           <span class="text-2xl font-bold mr-2">$</span>
           <input
             type="number"
@@ -343,6 +350,23 @@
             class="text-2xl font-bold focus:outline-none flex-1 bg-transparent"
             oninput="syncBiWeeklyInputs('mobile'); updateUI(); saveState();"
           />
+        </div>
+        <!-- Pay Frequency Toggle (Mobile) -->
+        <div class="flex gap-2 bg-slate-100 rounded-lg p-1">
+          <button
+            id="mobile-freq-biweekly"
+            onclick="setPayFrequency('bi-weekly')"
+            class="flex-1 py-2 px-3 rounded-md text-xs font-semibold transition-all bg-white text-slate-800 shadow-sm"
+          >
+            Bi-Weekly
+          </button>
+          <button
+            id="mobile-freq-semimonthly"
+            onclick="setPayFrequency('semi-monthly')"
+            class="flex-1 py-2 px-3 rounded-md text-xs font-semibold transition-all text-slate-600"
+          >
+            Twice a Month
+          </button>
         </div>
       </div>
 
@@ -384,24 +408,43 @@
 
       <!-- Summary Sidebar -->
       <div class="space-y-6">
-      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-        <div class="bg-blue-100 p-2 rounded-lg text-blue-600">
-          <i data-lucide="calendar"></i>
-        </div>
-        <div>
-          <label class="text-xs font-semibold uppercase text-slate-400 block tracking-tight">
-            Bi-Weekly After-Tax Pay
-          </label>
-          <div class="flex items-center">
-            <span class="text-lg font-bold mr-1">$</span>
-            <input
-              type="number"
-              id="bi-weekly-input"
-              value="2500"
-              class="text-lg font-bold focus:outline-none w-32 bg-transparent"
-              oninput="syncBiWeeklyInputs('desktop'); updateUI(); saveState();"
-            />
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <div class="flex items-center gap-4 mb-3">
+          <div class="bg-blue-100 p-2 rounded-lg text-blue-600">
+            <i data-lucide="calendar"></i>
           </div>
+          <div class="flex-1">
+            <label id="desktop-pay-label" class="text-xs font-semibold uppercase text-slate-400 block tracking-tight">
+              Bi-Weekly After-Tax Pay
+            </label>
+            <div class="flex items-center">
+              <span class="text-lg font-bold mr-1">$</span>
+              <input
+                type="number"
+                id="bi-weekly-input"
+                value="2500"
+                class="text-lg font-bold focus:outline-none w-32 bg-transparent"
+                oninput="syncBiWeeklyInputs('desktop'); updateUI(); saveState();"
+              />
+            </div>
+          </div>
+        </div>
+        <!-- Pay Frequency Toggle (Desktop) -->
+        <div class="flex gap-2 bg-slate-100 rounded-lg p-1">
+          <button
+            id="desktop-freq-biweekly"
+            onclick="setPayFrequency('bi-weekly')"
+            class="flex-1 py-2 px-3 rounded-md text-xs font-semibold transition-all bg-white text-slate-800 shadow-sm"
+          >
+            Bi-Weekly
+          </button>
+          <button
+            id="desktop-freq-semimonthly"
+            onclick="setPayFrequency('semi-monthly')"
+            class="flex-1 py-2 px-3 rounded-md text-xs font-semibold transition-all text-slate-600"
+          >
+            Twice a Month
+          </button>
         </div>
       </div>
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
@@ -444,7 +487,7 @@
 
         <div class="bg-blue-600 rounded-2xl shadow-sm p-6 text-white">
           <h3 class="font-bold mb-2">Budgeting Tip</h3>
-          <p class="text-blue-100 text-sm leading-relaxed">
+          <p id="tip-text" class="text-blue-100 text-sm leading-relaxed">
             Bi-weekly pay cycles mean you receive 26 paychecks a year. We've calculated your monthly budget based on this annual average.
           </p>
         </div>
@@ -509,6 +552,66 @@
     ];
 
     let categories = [...DEFAULT_CATEGORIES];
+    let payFrequency = 'bi-weekly'; // 'bi-weekly' or 'semi-monthly'
+
+    // Set pay frequency and update UI
+    function setPayFrequency(freq) {
+      payFrequency = freq;
+
+      // Update button states
+      const mobileButtons = {
+        'bi-weekly': document.getElementById('mobile-freq-biweekly'),
+        'semi-monthly': document.getElementById('mobile-freq-semimonthly')
+      };
+      const desktopButtons = {
+        'bi-weekly': document.getElementById('desktop-freq-biweekly'),
+        'semi-monthly': document.getElementById('desktop-freq-semimonthly')
+      };
+
+      // Reset all buttons
+      Object.values(mobileButtons).forEach(btn => {
+        if (btn) {
+          btn.classList.remove('bg-white', 'text-slate-800', 'shadow-sm');
+          btn.classList.add('text-slate-600');
+        }
+      });
+      Object.values(desktopButtons).forEach(btn => {
+        if (btn) {
+          btn.classList.remove('bg-white', 'text-slate-800', 'shadow-sm');
+          btn.classList.add('text-slate-600');
+        }
+      });
+
+      // Activate selected button
+      if (mobileButtons[freq]) {
+        mobileButtons[freq].classList.add('bg-white', 'text-slate-800', 'shadow-sm');
+        mobileButtons[freq].classList.remove('text-slate-600');
+      }
+      if (desktopButtons[freq]) {
+        desktopButtons[freq].classList.add('bg-white', 'text-slate-800', 'shadow-sm');
+        desktopButtons[freq].classList.remove('text-slate-600');
+      }
+
+      // Update labels
+      const labelText = freq === 'bi-weekly' ? 'Bi-Weekly After-Tax Pay' : 'Semi-Monthly After-Tax Pay';
+      const mobileLabel = document.getElementById('mobile-pay-label');
+      const desktopLabel = document.getElementById('desktop-pay-label');
+      if (mobileLabel) mobileLabel.textContent = labelText;
+      if (desktopLabel) desktopLabel.textContent = labelText;
+
+      // Update tip text
+      const tipText = document.getElementById('tip-text');
+      if (tipText) {
+        if (freq === 'bi-weekly') {
+          tipText.textContent = "Bi-weekly pay cycles mean you receive 26 paychecks a year. We've calculated your monthly budget based on this annual average.";
+        } else {
+          tipText.textContent = "Getting paid twice a month means you receive exactly 24 paychecks a year. Your monthly budget is simply two paychecks combined.";
+        }
+      }
+
+      updateUI();
+      saveState();
+    }
 
     // Sync bi-weekly inputs between mobile and desktop
     function syncBiWeeklyInputs(source) {
@@ -524,8 +627,10 @@
 
     // Update mobile sticky summary
     function updateMobileSummary() {
-      const biWeekly = Number(document.getElementById("bi-weekly-input").value) || 0;
-      const netPay = (biWeekly * 26) / 12;
+      const paycheckAmount = Number(document.getElementById("bi-weekly-input").value) || 0;
+      const netPay = payFrequency === 'bi-weekly'
+        ? (paycheckAmount * 26) / 12
+        : paycheckAmount * 2;
 
       let totalSpent = 0;
       categories.forEach((cat) => {
@@ -567,6 +672,11 @@
         if (input) input.value = String(data.biWeeklyPay);
       }
 
+      if (data.payFrequency === 'bi-weekly' || data.payFrequency === 'semi-monthly') {
+        payFrequency = data.payFrequency;
+        setPayFrequency(payFrequency);
+      }
+
       if (Array.isArray(data.categories)) {
         categories = data.categories
           .filter(c => c && typeof c.id === "string")
@@ -581,7 +691,7 @@
 
     function saveState() {
       const biWeeklyPay = Number(document.getElementById("bi-weekly-input").value) || 0;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ biWeeklyPay, categories }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ biWeeklyPay, payFrequency, categories }));
     }
 
     function roundToCents(n) {
@@ -924,8 +1034,10 @@
     }
 
     function updateUI() {
-      const biWeekly = Number(document.getElementById("bi-weekly-input").value) || 0;
-      const netPay = (biWeekly * 26) / 12;
+      const paycheckAmount = Number(document.getElementById("bi-weekly-input").value) || 0;
+      const netPay = payFrequency === 'bi-weekly'
+        ? (paycheckAmount * 26) / 12
+        : paycheckAmount * 2;
 
       document.getElementById("monthly-income-display").innerText =
         `$${Math.round(netPay).toLocaleString()}`;
@@ -988,6 +1100,7 @@
 
     window.onload = () => {
       loadState();
+      setPayFrequency(payFrequency); // Initialize toggle UI
       syncBiWeeklyInputs('desktop'); // Sync mobile input on load
       renderCategories();
       updateUI();
