@@ -44,20 +44,63 @@
         font-size: clamp(14px, 3.5vw, 16px);
       }
 
-      .mobile-bottom-nav { display: flex; }
+      /* BUG 1 FIX: Bottom navigation must be visible */
+      .mobile-bottom-nav {
+        display: flex !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+      }
+
+      /* BUG 3 FIX: Style sticky summary to show Estimated Monthly Income */
       .mobile-sticky-summary {
-        display: flex;
+        display: block !important;
         position: sticky;
         top: 0;
         z-index: 100;
         background: white;
-        border-bottom: 1px solid #eee;
-        padding: clamp(8px, 2vw, 12px) clamp(16px, 4vw, 24px);
-        font-size: clamp(13px, 3vw, 15px);
+        border-bottom: 1px solid #e2e8f0;
+        padding: clamp(12px, 3vw, 16px) clamp(16px, 4vw, 20px);
+      }
+
+      .mobile-sticky-summary .flex {
+        display: block;
+        text-align: left;
+      }
+
+      /* Hide the "Left:" section */
+      .mobile-sticky-summary > div > div:last-child {
+        display: none;
+      }
+
+      /* Hide original "Budget:" label and replace with new text */
+      .mobile-sticky-summary .text-slate-500.text-xs {
+        font-size: 0;
+      }
+
+      .mobile-sticky-summary .text-slate-500.text-xs::before {
+        content: "Estimated Monthly Income: ";
+        font-size: 14px;
+        color: #64748b;
+        font-weight: 400;
+      }
+
+      #mobile-budget-display {
+        font-weight: bold !important;
+        color: #3b82f6 !important;
+        font-size: 18px !important;
+        margin-left: 4px !important;
       }
 
       nav.sticky { display: none; }
       header.desktop-only { display: none; }
+
+      /* BUG 2 FIX: Hide sidebar bi-weekly card (the one with calendar icon) */
+      .space-y-6 > .bg-white.p-4.rounded-xl.shadow-sm.border.flex.items-center.gap-4 {
+        display: none;
+      }
 
       .lg\:grid-cols-3,
       .grid.lg\:grid-cols-3 {
@@ -78,9 +121,19 @@
         white-space: nowrap;
       }
 
+      /* BUG 4 FIX: Make Add New button inline and compact */
+      .p-4.bg-slate-50.border-b.border-slate-200.flex {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        flex-direction: row !important;
+      }
+
       .add-new-btn {
-        width: 100%;
-        justify-content: center;
+        width: auto !important;
+        padding: 6px 14px !important;
+        font-size: 14px !important;
+        min-height: auto !important;
       }
 
       .mobile-input-card {
@@ -112,8 +165,9 @@
         min-width: 0;
       }
 
+      /* BUG 5 FIX: Ensure toggle buttons work on touch and show active state */
       .toggle-buttons {
-        display: flex;
+        display: flex !important;
         height: 44px;
         border-radius: clamp(8px, 2vw, 10px);
         overflow: hidden;
@@ -128,11 +182,13 @@
         background: white;
         color: #64748b;
         font-weight: 600;
+        cursor: pointer;
+        touch-action: manipulation;
       }
 
       .toggle-buttons button.active {
-        background: #3b82f6;
-        color: white;
+        background: #3b82f6 !important;
+        color: white !important;
       }
 
       .swipe-container {
@@ -485,6 +541,10 @@
       const cat = categories.find((c) => c.id === id);
       if (cat) {
         cat[field] = field === "value" ? Number(value) : value;
+        // BUG 5 FIX: Re-render categories when type changes to update toggle button active state on mobile
+        if (field === "type" && isMobile()) {
+          renderCategories();
+        }
         updateUI();
         saveState();
       }
