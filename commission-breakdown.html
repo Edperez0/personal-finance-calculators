@@ -578,24 +578,18 @@
             mobileContainer.appendChild(card);
           });
 
-          // Add total summary card for mobile
+          // Add total summary bar for mobile
           const totalCard = document.createElement('div');
-          totalCard.className = 'bg-slate-50 border-t-2 border-slate-300';
-          totalCard.style.padding = 'clamp(16px, 4vw, 20px)';
-          totalCard.style.marginTop = 'clamp(8px, 2vw, 12px)';
+          totalCard.className = 'bg-slate-50';
+          totalCard.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: clamp(12px, 4vw, 20px); border-top: 2px solid #e8eaf0;';
           totalCard.innerHTML = `
-            <div class="flex items-center justify-between">
-              <h3 class="text-lg font-bold text-slate-700">Total</h3>
-              <div class="flex items-center gap-6">
-                <div class="text-right">
-                  <p class="text-xs text-slate-400 uppercase font-bold mb-1">Percentage</p>
-                  <p id="mobile-total-percent" class="font-mono text-lg font-bold text-slate-700">0.00%</p>
-                </div>
-                <div class="text-right">
-                  <p class="text-xs text-slate-400 uppercase font-bold mb-1">Amount</p>
-                  <p id="mobile-total-amount" class="font-mono text-lg font-bold text-slate-700">$0.00</p>
-                </div>
-              </div>
+            <div>
+              <p class="text-xs text-slate-400 uppercase font-bold tracking-wide mb-1">Total Allocated</p>
+              <p id="mobile-total-percent" class="font-mono text-lg font-bold text-slate-700">0.00%</p>
+            </div>
+            <div class="text-right">
+              <p class="text-xs text-slate-400 uppercase font-bold tracking-wide mb-1">Amount</p>
+              <p id="mobile-total-amount" class="font-mono text-lg font-bold text-slate-700">$0.00</p>
             </div>
           `;
           mobileContainer.appendChild(totalCard);
@@ -639,10 +633,24 @@
       document.getElementById('total-percent').textContent = formatPercent(totalPercent);
       document.getElementById('total-amount').textContent = formatCurrency(totalAmount);
 
-      // Update mobile total elements
+      // Update mobile total elements with color logic
       const mobileTotalPercent = document.getElementById('mobile-total-percent');
       const mobileTotalAmount = document.getElementById('mobile-total-amount');
-      if (mobileTotalPercent) mobileTotalPercent.textContent = formatPercent(totalPercent);
+      if (mobileTotalPercent) {
+        mobileTotalPercent.textContent = formatPercent(totalPercent);
+        const diff = Math.round((totalPercent - 100) * 100) / 100;
+        const absDiff = Math.abs(diff);
+        if (absDiff < 0.01) {
+          // Exactly 100% - green
+          mobileTotalPercent.className = 'font-mono text-lg font-bold text-emerald-600';
+        } else if (diff < 0) {
+          // Under 100% - orange
+          mobileTotalPercent.className = 'font-mono text-lg font-bold text-amber-600';
+        } else {
+          // Over 100% - red
+          mobileTotalPercent.className = 'font-mono text-lg font-bold text-red-600';
+        }
+      }
       if (mobileTotalAmount) mobileTotalAmount.textContent = formatCurrency(totalAmount);
 
       const statusEl = document.getElementById('allocation-status');
