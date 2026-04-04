@@ -8,20 +8,18 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    /* Global box-sizing fix */
     *, *::before, *::after {
       box-sizing: border-box;
     }
 
     html, body {
       overflow-x: hidden;
-      max-width: 100vw;
-      position: relative;
+      -webkit-text-size-adjust: 100%;
     }
 
-    body {
-      background: #f8fafc;
-      isolation: isolate;
+    img, video, canvas, svg {
+      max-width: 100%;
+      display: block;
     }
 
     input[type=number]::-webkit-inner-spin-button,
@@ -35,322 +33,116 @@
       appearance: none;
     }
 
-    /* Mobile-specific styles */
     @media (max-width: 768px) {
-      /* Hide top nav on mobile */
-      nav.sticky { display: none; }
-
-      /* Show bottom nav and sticky summary on mobile */
-      .mobile-bottom-nav,
-      .mobile-sticky-summary { display: flex !important; }
-
-      /* Add padding at top and bottom for fixed elements */
       body {
-        padding-top: 60px;
-        padding-bottom: 80px;
+        padding-top: clamp(48px, 12vw, 60px);
+        padding-bottom: clamp(70px, 18vw, 90px);
+        font-size: clamp(14px, 3.5vw, 16px);
       }
 
-      /* Bigger touch targets for inputs and selects */
-      input[type="text"], input[type="number"], select {
-        padding: 0.75rem !important;
-        font-size: 16px !important;
-        min-height: 44px !important;
-      }
-
-      /* Compact header */
-      header h1 { font-size: 1.5rem !important; }
-
-      /* Stack main grid layout vertically */
-      .grid.lg\\:grid-cols-3 {
-        grid-template-columns: 1fr !important;
-      }
-
-      .lg\\:col-span-1,
-      .lg\\:col-span-2 {
-        grid-column: span 1 !important;
-      }
-
-      /* Stack stat cards vertically */
-      .grid.md\\:grid-cols-3 {
-        grid-template-columns: 1fr !important;
-      }
-
-      /* Make stat cards stack better */
-      .stat-card {
-        flex-direction: row !important;
-        gap: 1rem !important;
-      }
-
-      /* Stack strategy comparison cards */
-      #strategy-comparison .grid.md\\:grid-cols-2 {
-        grid-template-columns: 1fr !important;
-      }
-
-      /* Better button sizing */
-      button {
-        min-height: 44px !important;
-      }
-
-      /* Full-width cards with consistent padding */
-      .rounded-2xl, .rounded-xl {
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-      }
-
-      /* Tighter spacing between sections */
-      .space-y-6 > * + * {
-        margin-top: 1rem !important;
-      }
-
-      /* Export buttons container */
-      .flex.gap-2.items-center {
-        flex-wrap: wrap !important;
-        gap: 0.5rem !important;
-      }
-
-      /* Better horizontal scrolling for table */
-      .overflow-x-auto {
-        -webkit-overflow-scrolling: touch;
-      }
-
-      /* Progress bars full width */
-      .w-full {
-        width: 100% !important;
-      }
-
-      /* Typography - ensure no clipping */
-      h1, h2, h3 {
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-      }
-
-      /* Scale down large numbers if needed */
-      #stat-date, #stat-interest, #stat-savings {
-        font-size: clamp(0.875rem, 4vw, 1.125rem) !important;
-      }
-
-      /* Add/Delete loan buttons proper sizing */
-      #add-loan, #add-bonus {
-        min-height: 44px !important;
-        padding: 12px 16px !important;
-      }
-
-      /* Scenario save button */
-      #save-scenario {
-        min-height: 44px !important;
-      }
-
-      /* Export buttons better sizing */
-      #export-csv, #export-pdf {
-        min-height: 44px !important;
-        padding: 12px 16px !important;
-      }
-
-      /* Consistent section padding */
-      section.rounded-2xl {
-        padding: 16px !important;
-      }
-
-      /* Spacing between loan/bonus items */
-      .loan-item, .bonus-item {
-        padding: 16px !important;
-        margin-bottom: 16px !important;
-      }
-
-      /* Warning block full width */
-      #loan-warning-block {
-        padding: 16px !important;
-        margin-bottom: 1rem !important;
-      }
-
-      /* Strategy comparison readable on mobile */
-      #strategy-comparison {
-        padding: 16px !important;
-      }
-
-      #strategy-comparison .p-4 {
-        padding: 16px !important;
-      }
-
-      /* Chart container proper height */
-      .h-80 {
-        height: 300px !important;
-      }
-
-      /* Table header sticky on mobile */
-      thead.sticky {
-        position: sticky !important;
-        top: 0 !important;
-        z-index: 10 !important;
-      }
-
-      /* CRITICAL: Fix table overflow - allow horizontal scroll within container */
-      .overflow-x-auto {
-        overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        max-width: 100% !important;
-        width: 100% !important;
-        display: block !important;
-      }
-
-      /* Ensure table doesn't overflow its container */
-      .overflow-x-auto table {
-        min-width: 650px !important;
-        width: max-content !important;
-        display: table !important;
-      }
-
-      /* Table wrapper must not overflow */
-      .bg-white.rounded-2xl.shadow-sm.overflow-hidden {
-        overflow: hidden !important;
-        max-width: 100% !important;
-      }
-
-      /* Table header must not overflow */
-      .overflow-x-auto thead th {
-        white-space: nowrap !important;
-      }
-
-      /* Export buttons container - wrap on mobile */
-      .flex.gap-2.items-center {
-        flex-wrap: wrap !important;
-        justify-content: flex-start !important;
-        gap: 0.5rem !important;
-      }
-
-      .flex.gap-2.items-center button {
-        flex-shrink: 0 !important;
-        min-height: 44px !important;
-      }
-
-      /* All cards and containers must be full width */
-      .bg-white, .rounded-2xl, .rounded-xl, .shadow-sm {
-        max-width: 100% !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-      }
-
-      /* Prevent any element from causing horizontal scroll */
-      .max-w-5xl {
-        max-width: 100% !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-      }
-
-      /* CRITICAL: Fix z-index layering to prevent ghost content */
-      body {
-        position: relative !important;
-        isolation: isolate !important;
-      }
-
-      body > * {
-        position: relative !important;
-        z-index: 1 !important;
-      }
-
-      .mobile-bottom-nav {
-        z-index: 1000 !important;
-        position: fixed !important;
-        isolation: isolate !important;
-        background: white !important;
-        contain: layout style paint !important;
-      }
-
+      .mobile-bottom-nav { display: flex; }
       .mobile-sticky-summary {
-        z-index: 900 !important;
-        position: fixed !important;
-        isolation: isolate !important;
-        background: white !important;
-        contain: layout style paint !important;
+        display: flex;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: white;
+        border-bottom: 1px solid #eee;
+        padding: clamp(8px, 2vw, 12px) clamp(16px, 4vw, 24px);
+        font-size: clamp(13px, 3vw, 15px);
       }
 
-      nav.sticky {
-        z-index: 800 !important;
-        isolation: isolate !important;
+      nav.sticky { display: none; }
+      header h1 { font-size: clamp(18px, 5vw, 28px); }
+
+      .lg\:grid-cols-3,
+      .grid.lg\:grid-cols-3,
+      .grid.md\:grid-cols-3,
+      #strategy-comparison .grid.md\:grid-cols-2 {
+        grid-template-columns: 1fr;
       }
 
-      /* Isolate each page's content - prevent bleed-through */
-      .p-4.md\\:p-8 {
-        position: relative !important;
-        z-index: 1 !important;
-        background: #f8fafc !important;
-        min-height: calc(100vh - 140px) !important;
-        isolation: isolate !important;
-        contain: layout style !important;
-      }
-
-      /* Force all absolute/fixed positioned children to stay within bounds */
-      .p-4.md\\:p-8 * {
-        max-width: 100% !important;
-      }
-
-      /* Ensure sections don't overlap */
-      section, .space-y-6 > * {
-        isolation: isolate !important;
-        position: relative !important;
-      }
-    }
-
-    /* Navigation tabs - horizontal scroll on mobile */
-    @media (max-width: 768px) {
-      nav.sticky .flex {
-        overflow-x: auto !important;
-        flex-wrap: nowrap !important;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-      }
-
-      nav.sticky .flex::-webkit-scrollbar {
-        display: none;
-      }
-
-      nav.sticky a {
-        flex-shrink: 0 !important;
-        white-space: nowrap !important;
-        min-height: 44px !important;
-        display: flex !important;
-        align-items: center !important;
-      }
-
-      /* Main content container proper padding */
-      .p-4 {
-        padding: 16px !important;
-      }
-
-      /* Ensure no horizontal overflow anywhere */
-      body, html {
-        overflow-x: hidden !important;
-        max-width: 100vw !important;
-      }
-
-      /* Grid containers */
-      .grid {
-        max-width: 100% !important;
-        width: 100% !important;
-      }
-
-      /* All loan and bonus containers */
-      #loan-container, #bonus-container, #scenarios-list {
-        max-width: 100% !important;
-        width: 100% !important;
-        overflow-x: hidden !important;
-      }
-
-      .loan-item, .bonus-item {
-        max-width: 100% !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-      }
-
-      /* Input containers */
       .grid.grid-cols-2 {
-        max-width: 100% !important;
-        width: 100% !important;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(8px, 2vw, 16px);
       }
 
-      /* Buttons container */
-      .flex.gap-2.items-center {
-        max-width: 100% !important;
+      input, select, textarea {
+        font-size: max(16px, 1vw);
+        width: 100%;
+        padding: clamp(10px, 2.5vw, 14px);
+        border-radius: clamp(8px, 2vw, 12px);
+        min-height: clamp(44px, 10vw, 52px);
+      }
+
+      button {
+        min-height: clamp(44px, 10vw, 52px);
+        padding: clamp(10px, 2.5vw, 14px) clamp(16px, 4vw, 24px);
+        white-space: nowrap;
+      }
+
+      #add-loan, #add-bonus {
+        width: 100%;
+      }
+
+      #save-scenario {
+        min-width: 80px;
+        flex-shrink: 0;
+      }
+
+      .flex.gap-2 {
+        display: flex;
+        gap: clamp(8px, 2vw, 12px);
+        flex-wrap: wrap;
+      }
+
+      #export-csv, #export-pdf {
+        flex: 1;
+        min-width: min(120px, 100%);
+      }
+
+      .stat-card {
+        flex-direction: row;
+        gap: clamp(12px, 3vw, 16px);
+      }
+
+      .space-y-6 > * + * {
+        margin-top: clamp(12px, 3vw, 20px);
+      }
+
+      .rounded-2xl {
+        border-radius: clamp(12px, 3vw, 24px);
+        padding: clamp(12px, 4vw, 24px);
+      }
+
+      section.rounded-2xl,
+      .loan-item, .bonus-item,
+      #loan-warning-block,
+      #strategy-comparison {
+        padding: clamp(12px, 4vw, 16px);
+      }
+
+      .h-80 {
+        height: clamp(200px, 50vw, 280px);
+      }
+
+      .overflow-x-auto {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .overflow-x-auto table {
+        min-width: 650px;
+      }
+
+      #stat-date, #stat-interest, #stat-savings {
+        font-size: clamp(14px, 4vw, 18px);
+      }
+
+      .max-w-5xl {
+        padding-left: clamp(12px, 4vw, 20px);
+        padding-right: clamp(12px, 4vw, 20px);
       }
     }
 
