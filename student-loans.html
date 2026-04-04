@@ -40,16 +40,17 @@
         font-size: clamp(14px, 3.5vw, 16px);
       }
 
-      .mobile-bottom-nav { display: flex; }
-      .mobile-sticky-summary {
+      .mobile-bottom-nav {
         display: flex;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background: white;
-        border-bottom: 1px solid #eee;
-        padding: clamp(8px, 2vw, 12px) clamp(16px, 4vw, 24px);
-        font-size: clamp(13px, 3vw, 15px);
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+      }
+      /* Bug 3 fix: Hide sticky summary to avoid duplicate result cards */
+      .mobile-sticky-summary {
+        display: none !important;
       }
 
       nav.sticky { display: none; }
@@ -144,10 +145,71 @@
         padding-left: clamp(12px, 4vw, 20px);
         padding-right: clamp(12px, 4vw, 20px);
       }
+
+      /* Bug 2 fixes: All cards full width with overflow hidden */
+      .bg-white,
+      section {
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      /* Loan items */
+      .loan-balance {
+        width: 100%;
+      }
+
+      .loan-pay-freq {
+        width: 100%;
+      }
+
+      /* Add buttons full width */
+      #add-loan, #add-bonus {
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* Saved Scenarios */
+      #scenario-name {
+        flex: 1;
+        min-width: 0;
+      }
+
+      #save-scenario {
+        width: 80px;
+        flex-shrink: 0;
+      }
+
+      /* Result cards */
+      .stat-card {
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* Chart container */
+      .h-80 {
+        width: 100%;
+        overflow: hidden;
+      }
+
+      .h-80 canvas {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      /* CSV/PDF buttons */
+      #export-csv, #export-pdf {
+        flex: 1;
+        min-width: 0;
+      }
     }
 
     /* Hide mobile elements on desktop */
-    .mobile-bottom-nav,
+    .mobile-bottom-nav {
+      display: none;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
     .mobile-sticky-summary { display: none; }
   </style>
 </head>

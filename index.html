@@ -240,7 +240,11 @@
       }
     }
 
-    .mobile-bottom-nav,
+    .mobile-bottom-nav {
+      display: none;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
     .mobile-sticky-summary {
       display: none;
     }
@@ -669,11 +673,11 @@
               <div class="toggle-buttons" id="toggle-${cat.id}">
                 <button
                   class="${cat.type === 'fixed' ? 'active' : ''}"
-                  onclick="updateCategory('${cat.id}', 'type', 'fixed')"
+                  onclick="event.stopPropagation(); updateCategory('${cat.id}', 'type', 'fixed')"
                 >$</button>
                 <button
                   class="${cat.type === 'percent' ? 'active' : ''}"
-                  onclick="updateCategory('${cat.id}', 'type', 'percent')"
+                  onclick="event.stopPropagation(); updateCategory('${cat.id}', 'type', 'percent')"
                 >%</button>
               </div>
             </div>

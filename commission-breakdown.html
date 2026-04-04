@@ -36,7 +36,14 @@
         font-size: clamp(14px, 3.5vw, 16px);
       }
 
-      .mobile-bottom-nav { display: flex; }
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+      }
       .mobile-sticky-summary {
         display: flex;
         position: sticky;
@@ -108,7 +115,11 @@
       }
     }
 
-    .mobile-bottom-nav,
+    .mobile-bottom-nav {
+      display: none;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
     .mobile-sticky-summary,
     .mobile-card-container { display: none; }
   </style>
@@ -627,6 +638,15 @@
     renderRows();
     updateCommission();
     lucide.createIcons();
+
+    // Bug 5 fix: Ensure Add Category button works on touch devices
+    const addBtn = document.querySelector('.add-category-btn');
+    if (addBtn) {
+      addBtn.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        addAllocation();
+      }, { passive: false });
+    }
   </script>
 </body>
 </html>
