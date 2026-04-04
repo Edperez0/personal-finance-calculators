@@ -92,7 +92,13 @@
       .grid.grid-cols-2,
       #strategy-comparison .grid.md\:grid-cols-2 {
         grid-template-columns: 1fr !important;
-        gap: clamp(8px, 2vw, 16px);
+        gap: clamp(16px, 4vw, 20px) !important;
+      }
+
+      /* Main container grid - synchronized gap for uniform spacing */
+      .grid.grid-cols-1.lg\:grid-cols-3 {
+        display: grid;
+        gap: clamp(16px, 4vw, 20px);
       }
 
       /* Specifically target loan and bonus item grids */
@@ -170,15 +176,25 @@
         gap: clamp(12px, 3vw, 16px);
       }
 
-      /* Spacing containers must not overflow */
+      /* Convert space-y to flexbox gap to prevent double-counting with grid gap */
       .space-y-6,
       .space-y-4 {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(16px, 4vw, 20px);
         width: 100%;
         max-width: 100%;
       }
 
-      .space-y-6 > * + * {
-        margin-top: clamp(12px, 3vw, 20px);
+      /* Override Tailwind's space-y margin on mobile */
+      .space-y-6 > * + *,
+      .space-y-4 > * + * {
+        margin-top: 0 !important;
+      }
+
+      /* Ensure header to first card spacing matches uniform rhythm */
+      header.mb-8 {
+        margin-bottom: clamp(16px, 4vw, 20px) !important;
       }
 
       .rounded-2xl {
