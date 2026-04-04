@@ -264,7 +264,7 @@
 
       .space-y-6 > * + *,
       .space-y-4 > * + * {
-        margin-top: clamp(12px, 3vw, 16px) !important;
+        margin-top: clamp(16px, 4vw, 20px) !important;
       }
 
       /* Fix gap between sections on mobile */
@@ -276,6 +276,12 @@
       .mobile-input-card,
       .bg-white.rounded-2xl {
         margin-bottom: clamp(16px, 4vw, 20px);
+      }
+
+      /* Ensure consistent spacing for all sections */
+      .lg\:col-span-2.space-y-4,
+      .space-y-6 {
+        gap: clamp(16px, 4vw, 20px);
       }
 
       .rounded-2xl, .rounded-xl {
