@@ -193,6 +193,31 @@
         color: white !important;
       }
 
+      /* Mobile reorder buttons */
+      .mobile-reorder-btn {
+        min-width: 44px;
+        min-height: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        color: #64748b;
+        padding: 0;
+        cursor: pointer;
+        touch-action: manipulation;
+        transition: color 0.2s ease;
+      }
+
+      .mobile-reorder-btn:not(:disabled):active {
+        color: #3b82f6;
+        transform: scale(0.95);
+      }
+
+      .mobile-reorder-btn:disabled {
+        pointer-events: none;
+      }
+
       .swipe-container {
         position: relative;
         overflow: hidden;
@@ -619,6 +644,31 @@
       saveState();
     }
 
+    // Mobile up/down arrow functions
+    function moveCategoryUp(id) {
+      const index = categories.findIndex(c => c.id === id);
+      if (index <= 0) return; // Already at top or not found
+
+      // Swap with previous item
+      [categories[index - 1], categories[index]] = [categories[index], categories[index - 1]];
+
+      renderCategories();
+      updateUI();
+      saveState();
+    }
+
+    function moveCategoryDown(id) {
+      const index = categories.findIndex(c => c.id === id);
+      if (index === -1 || index >= categories.length - 1) return; // At bottom or not found
+
+      // Swap with next item
+      [categories[index], categories[index + 1]] = [categories[index + 1], categories[index]];
+
+      renderCategories();
+      updateUI();
+      saveState();
+    }
+
     function renderCategories() {
       const container = document.getElementById("categories-container");
       container.innerHTML =
@@ -654,12 +704,31 @@
           row.addEventListener("dragleave", onDragLeave);
           row.addEventListener("drop", onDrop);
 
+          const currentIndex = categories.findIndex(c => c.id === cat.id);
+          const isFirst = currentIndex === 0;
+          const isLast = currentIndex === categories.length - 1;
+
           row.innerHTML = `
             <div class="flex items-start justify-between mb-3">
               <div class="flex items-center gap-2 flex-1">
-                <span class="text-slate-300">
-                  <i data-lucide="grip-vertical" class="w-5 h-5"></i>
-                </span>
+                <div class="flex flex-col gap-1">
+                  <button
+                    onclick="moveCategoryUp('${cat.id}')"
+                    class="mobile-reorder-btn ${isFirst ? 'opacity-30 cursor-not-allowed' : ''}"
+                    ${isFirst ? 'disabled' : ''}
+                    aria-label="Move up"
+                  >
+                    <i data-lucide="chevron-up" class="w-5 h-5"></i>
+                  </button>
+                  <button
+                    onclick="moveCategoryDown('${cat.id}')"
+                    class="mobile-reorder-btn ${isLast ? 'opacity-30 cursor-not-allowed' : ''}"
+                    ${isLast ? 'disabled' : ''}
+                    aria-label="Move down"
+                  >
+                    <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                  </button>
+                </div>
                 <input type="text" value="${escapeHtml(cat.name)}"
                   placeholder="Category Name"
                   oninput="updateCategory('${cat.id}', 'name', this.value)"

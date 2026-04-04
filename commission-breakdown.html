@@ -106,6 +106,31 @@
         opacity: 1;
       }
 
+      /* Mobile reorder buttons */
+      .mobile-reorder-btn {
+        min-width: 44px;
+        min-height: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        color: #64748b;
+        padding: 0;
+        cursor: pointer;
+        touch-action: manipulation;
+        transition: color 0.2s ease;
+      }
+
+      .mobile-reorder-btn:not(:disabled):active {
+        color: #3b82f6;
+        transform: scale(0.95);
+      }
+
+      .mobile-reorder-btn:disabled {
+        pointer-events: none;
+      }
+
       .mobile-card-container > div {
         padding: clamp(12px, 4vw, 16px);
       }
@@ -439,6 +464,31 @@
       saveState();
     }
 
+    // Mobile up/down arrow functions
+    function moveAllocationUp(id) {
+      const index = allocations.findIndex(item => item.id === id);
+      if (index <= 0) return; // Already at top or not found
+
+      // Swap with previous item
+      [allocations[index - 1], allocations[index]] = [allocations[index], allocations[index - 1]];
+
+      renderRows();
+      updateCommission();
+      saveState();
+    }
+
+    function moveAllocationDown(id) {
+      const index = allocations.findIndex(item => item.id === id);
+      if (index === -1 || index >= allocations.length - 1) return; // At bottom or not found
+
+      // Swap with next item
+      [allocations[index], allocations[index + 1]] = [allocations[index + 1], allocations[index]];
+
+      renderRows();
+      updateCommission();
+      saveState();
+    }
+
     function renderRows() {
       // Render desktop table
       const tbody = document.getElementById('allocation-body');
@@ -517,7 +567,7 @@
         if (allocations.length === 0) {
           mobileContainer.innerHTML = '<div class="p-8 text-center text-slate-400">No categories yet. Click "Add Category" to get started.</div>';
         } else {
-          allocations.forEach((item) => {
+          allocations.forEach((item, index) => {
             const card = document.createElement('div');
             card.className = 'p-4 bg-white relative';
             card.setAttribute('draggable', 'true');
@@ -528,12 +578,30 @@
             card.addEventListener('dragleave', onDragLeave);
             card.addEventListener('drop', onDrop);
 
+            const isFirst = index === 0;
+            const isLast = index === allocations.length - 1;
+
             card.innerHTML = `
               <div class="flex items-start justify-between mb-3">
                 <div class="flex items-center gap-2 flex-1">
-                  <span class="text-slate-300">
-                    <i data-lucide="grip-vertical" class="w-5 h-5"></i>
-                  </span>
+                  <div class="flex flex-col gap-1">
+                    <button
+                      onclick="moveAllocationUp('${item.id}')"
+                      class="mobile-reorder-btn ${isFirst ? 'opacity-30 cursor-not-allowed' : ''}"
+                      ${isFirst ? 'disabled' : ''}
+                      aria-label="Move up"
+                    >
+                      <i data-lucide="chevron-up" class="w-5 h-5"></i>
+                    </button>
+                    <button
+                      onclick="moveAllocationDown('${item.id}')"
+                      class="mobile-reorder-btn ${isLast ? 'opacity-30 cursor-not-allowed' : ''}"
+                      ${isLast ? 'disabled' : ''}
+                      aria-label="Move down"
+                    >
+                      <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                    </button>
+                  </div>
                   <input
                     type="text"
                     value="${escapeHtml(item.name)}"
