@@ -1,18 +1,35 @@
 /**
  * Client-side U.S. federal + state + FICA estimates for paycheck modeling.
  *
+ * --- 2026 SOURCES (verify annually) ---
  * Federal brackets & standard deduction (2025–2026, OBBB / inflation adjustments):
  *   https://www.irs.gov/filing/federal-income-tax-rates-and-brackets/
  *   https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill
  *   Revenue Procedure 2025-32 (PDF): https://www.irs.gov/pub/irs-drop/rp-25-32.pdf
  *
- * FICA — Social Security wage base & Medicare (incl. Additional Medicare Tax):
- *   https://www.irs.gov/taxes/social-security-and-medicare-withholding-rates-and-limits
- *   Topic 751 — Social Security and Medicare Withholding Rates: https://www.irs.gov/taxtopics/tc751
- *   Additional Medicare: IRC §3101(b)(2); withholding thresholds IRS FAQ
+ * Standard deductions (2026): Single $16,100 · MFJ $32,200 · HoH $24,150 (RP-25-32).
  *
- * State rules: verify and update annually from each state’s Department of Revenue
- * (links grouped in STATE_SOURCE_NOTE per region below).
+ * FICA (2026):
+ *   Social Security wage base = $184,500 (SSA Fact Sheet — Cost-of-Living Adjustment 2026)
+ *     https://www.ssa.gov/cola/
+ *   Social Security rate (employee) = 6.2% on wages up to wage base.
+ *   Medicare rate (employee) = 1.45% on all covered wages, no cap.
+ *   Additional Medicare Tax (employer withholds when wages exceed) = 0.9% above $200,000
+ *     (single threshold; not adjusted for filing status at withholding):
+ *     https://www.irs.gov/businesses/small-businesses-self-employed/questions-and-answers-for-the-additional-medicare-tax
+ *
+ * State rules: verify annually from each state's Department of Revenue (links grouped
+ * by region in STATE_SOURCE_NOTE comments below).
+ *
+ * LAST VERIFIED: 2026-04-10
+ * RE-VERIFY: each November (after IRS RP for next tax year and SSA COLA release).
+ *   Action items at re-verify time:
+ *     1. Update FEDERAL_BRACKETS for the new year.
+ *     2. Update STD_DEDUCTION amounts for Single / MFJ / MFS / HoH.
+ *     3. Update SS_WAGE_BASE constant.
+ *     4. Update ADDITIONAL_MEDICARE_THRESHOLD if changed (rare).
+ *     5. Spot-check 2–3 high-traffic states (CA, NY, TX) for bracket changes.
+ *     6. Bump LAST VERIFIED date above and re-run /tests/paycheck-validation.md.
  */
 
 /** @typedef {'single'|'mfj'|'mfs'|'hoh'} FilingStatus */

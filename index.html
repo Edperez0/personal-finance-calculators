@@ -42,6 +42,8 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/site-layout.css" />
   <style>
     /* GLOBAL RESETS */
     *, *::before, *::after {
@@ -187,6 +189,7 @@
 
       nav.sticky { display: none; }
       header.desktop-only { display: none; }
+      .desktop-only { display: none !important; }
 
       /* BUG 2 FIX: Hide sidebar bi-weekly card (the one with calendar icon) on mobile */
       .space-y-6 > .bg-white.p-4.rounded-xl.shadow-sm.border {
@@ -413,7 +416,7 @@
   </style>
 </head>
 
-<body class="bg-slate-50 text-slate-900 font-sans flex flex-col min-h-screen">
+<body class="bg-slate-50 text-slate-900 font-sans flex flex-col min-h-screen" data-active-nav="budget">
   <!-- Mobile Sticky Summary (hidden on desktop) -->
   <div class="mobile-sticky-summary fixed top-0 left-0 right-0 bg-white border-b border-slate-200 shadow-sm z-40 px-4 py-3">
     <div class="flex items-center justify-between text-sm">
@@ -428,48 +431,50 @@
     </div>
   </div>
 
-  <!-- Sticky Navigation Bar -->
-  <nav class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
-    <div class="max-w-5xl mx-auto px-4 md:px-8 py-4">
-      <div class="flex flex-wrap items-center gap-2">
-        <a href="index.html" class="px-4 py-2 rounded-full font-semibold text-sm transition-all bg-blue-600 text-white">
-          Budget Planner
-        </a>
-        <a href="commission-breakdown.html" class="px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">
-          Bonus
-        </a>
-        <a href="loan-payoff.html" class="px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">
-          Loan Payoff
-        </a>
-        <a href="paycheck-calculator.html" class="px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">
-          Paycheck
-        </a>
-        <span class="hidden sm:inline w-px h-5 bg-slate-200 shrink-0" aria-hidden="true"></span>
-        <div class="flex items-center gap-1 sm:gap-2 text-sm">
-          <a href="about.html" class="px-2 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 hover:text-blue-600">About</a>
-          <a href="privacy-policy.html" class="px-2 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 hover:text-blue-600">Privacy</a>
-        </div>
-      </div>
-    </div>
-  </nav>
+  <!-- Site nav (injected) -->
+  <div data-include="header"></div>
 
   <div class="p-4 md:p-8 flex-1">
     <div id="app" class="max-w-5xl mx-auto">
-      <div class="seo-intro mb-8" aria-labelledby="seo-budget-heading">
-        <div class="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <h1 id="seo-budget-heading">Budget Planner</h1>
-            <p class="text-sm text-slate-500 mt-2">Last updated: April 2026</p>
-          </div>
-          <div class="flex items-center gap-2 text-xs text-slate-500 shrink-0" id="device-save-row" aria-live="polite">
-            <span class="inline-flex items-center gap-1 text-slate-600" title="Your budget stays in this browser">
-              <i data-lucide="lock" class="w-3.5 h-3.5 text-slate-500" aria-hidden="true"></i>
-              <span>Saved to this device</span>
-            </span>
-            <span id="saved-flash" class="text-green-600 font-semibold opacity-0 transition-opacity duration-200 pointer-events-none" hidden>Saved</span>
+      <header class="page-title-row" aria-labelledby="seo-budget-heading">
+        <div class="page-title-stack">
+          <h1 id="seo-budget-heading">Budget Planner</h1>
+          <p class="page-last-updated">Last updated: April 2026</p>
+          <p class="page-subhead">Plan every dollar of your bi-weekly or twice-a-month paycheck before the month starts.</p>
+        </div>
+        <div data-include="page-header"></div>
+      </header>
+
+      <!-- Stat cards row -->
+      <section class="stat-row" aria-label="Budget summary">
+        <div class="stat-card">
+          <span class="stat-card__icon is-blue" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </span>
+          <div class="stat-card__body">
+            <p class="stat-card__label">Monthly Income</p>
+            <p class="stat-card__value" id="stat-monthly-income">$0</p>
           </div>
         </div>
-      </div>
+        <div class="stat-card">
+          <span class="stat-card__icon is-amber" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 17l4-4 4 4 5-5"/></svg>
+          </span>
+          <div class="stat-card__body">
+            <p class="stat-card__label">Total Expenses</p>
+            <p class="stat-card__value" id="stat-total-expenses">$0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__icon is-green" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+          </span>
+          <div class="stat-card__body">
+            <p class="stat-card__label">Remaining</p>
+            <p class="stat-card__value" id="stat-remaining">$0</p>
+          </div>
+        </div>
+      </section>
 
       <!-- Mobile Input Card (shows first on mobile, hidden on desktop) -->
       <div class="mobile-input-card md:hidden">
@@ -514,61 +519,6 @@
         </div>
       </div>
 
-      <!-- Desktop Header (hidden on mobile): single income control + monthly estimate -->
-      <header class="mb-8 desktop-only">
-        <div class="space-y-4">
-          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 md:p-5">
-            <div class="flex flex-wrap items-end gap-6">
-              <div class="flex items-center gap-4 min-w-0 flex-1">
-                <div class="bg-blue-100 p-2 rounded-lg text-blue-600 shrink-0">
-                  <i data-lucide="calendar"></i>
-                </div>
-                <div class="min-w-0">
-                  <label id="desktop-pay-label" class="text-xs font-semibold uppercase text-slate-400 block tracking-tight mb-1">
-                    Bi-Weekly After-Tax Pay
-                  </label>
-                  <div class="flex items-center flex-wrap gap-2">
-                    <span class="text-lg font-bold mr-1">$</span>
-                    <input
-                      type="number"
-                      id="bi-weekly-input"
-                      value="2500"
-                      class="text-lg font-bold focus:outline-none w-32 max-w-full bg-transparent border border-slate-200 rounded-lg px-2 py-1"
-                      oninput="syncBiWeeklyInputs('desktop'); updateUI(); saveState();"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="flex flex-col gap-2 min-w-[200px]">
-                <span class="text-xs font-semibold uppercase text-slate-400 tracking-tight">Pay frequency</span>
-                <div class="flex gap-2 bg-slate-100 rounded-lg p-1">
-                  <button
-                    id="desktop-freq-biweekly"
-                    type="button"
-                    onclick="setPayFrequency('bi-weekly')"
-                    class="flex-1 py-2 px-3 rounded-md text-xs font-semibold transition-all bg-white text-slate-800 shadow-sm"
-                  >
-                    Bi-Weekly
-                  </button>
-                  <button
-                    id="desktop-freq-semimonthly"
-                    type="button"
-                    onclick="setPayFrequency('semi-monthly')"
-                    class="flex-1 py-2 px-3 rounded-md text-xs font-semibold transition-all text-slate-600"
-                  >
-                    Twice a Month
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="flex flex-wrap items-center gap-2 text-blue-600 font-semibold bg-blue-50 px-3 py-1.5 rounded-full w-fit">
-            <span class="text-xs uppercase tracking-wider">Estimated Monthly Income:</span>
-            <span id="monthly-income-display" class="text-lg">$0</span>
-          </div>
-          <p class="text-slate-500 text-sm">Plan every dollar of your bi-weekly paycheck before the month starts.</p>
-        </div>
-      </header>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Main Budget Section -->
@@ -581,6 +531,7 @@
             </h2>
             <div class="flex items-center gap-2">
             <button type="button" onclick="resetBudgetPlanner()" class="text-sm font-medium text-slate-500 hover:text-blue-600 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors">Reset</button>
+            <button type="button" onclick="clearAllCategories()" class="text-sm font-medium text-slate-500 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors">Clear all</button>
             <button
               onclick="addCategory()"
               class="add-new-btn text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg flex items-center justify-center gap-1 transition-colors"
@@ -597,8 +548,53 @@
         </div>
       </div>
 
-      <!-- Summary Sidebar (income input lives in desktop header + mobile top card only) -->
+      <!-- Sidebar -->
       <div class="space-y-6">
+        <!-- Income card (desktop): compact at top of sidebar with frequency toggle -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 desktop-only">
+          <div class="flex items-start gap-3">
+            <div class="bg-blue-100 p-2 rounded-lg text-blue-600 shrink-0">
+              <i data-lucide="calendar"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+              <label id="desktop-pay-label" class="text-xs font-semibold uppercase text-slate-400 block tracking-tight mb-1">
+                Bi-Weekly After-Tax Pay
+              </label>
+              <div class="flex items-center gap-1">
+                <span class="text-lg font-bold">$</span>
+                <input
+                  type="number"
+                  id="bi-weekly-input"
+                  value="2500"
+                  class="text-lg font-bold focus:outline-none w-full bg-transparent border border-slate-200 rounded-lg px-2 py-1"
+                  oninput="syncBiWeeklyInputs('desktop'); updateUI(); saveState();"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="mt-3">
+            <span class="text-[11px] font-semibold uppercase text-slate-400 tracking-tight block mb-1">Pay frequency</span>
+            <div class="flex gap-1 bg-slate-100 rounded-lg p-1">
+              <button
+                id="desktop-freq-biweekly"
+                type="button"
+                onclick="setPayFrequency('bi-weekly')"
+                class="flex-1 py-1.5 px-2 rounded-md text-xs font-semibold transition-all bg-white text-slate-800 shadow-sm"
+              >Bi-Weekly</button>
+              <button
+                id="desktop-freq-semimonthly"
+                type="button"
+                onclick="setPayFrequency('semi-monthly')"
+                class="flex-1 py-1.5 px-2 rounded-md text-xs font-semibold transition-all text-slate-600"
+              >Twice a Month</button>
+            </div>
+          </div>
+          <div class="mt-3 flex items-center gap-2 text-blue-600 font-semibold bg-blue-50 px-3 py-1.5 rounded-full text-xs">
+            <span class="uppercase tracking-wider">Monthly:</span>
+            <span id="monthly-income-display">$0</span>
+          </div>
+        </div>
+
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
           <h2 class="text-lg font-bold mb-4 text-slate-800">Budget Breakdown</h2>
 
@@ -637,11 +633,13 @@
           </div>
         </div>
 
+        <!-- Budget mix: stacked horizontal bar (needs / wants / savings), matches Total Expenses bar width -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
           <h2 class="text-lg font-bold mb-3 text-slate-800">Budget mix</h2>
-          <p class="text-xs text-slate-500 mb-3">Share of estimated monthly income by category (needs, wants, savings).</p>
-          <div id="budget-stack-wrap" class="w-full rounded-full overflow-hidden bg-slate-100 h-4 flex min-h-[1rem]" role="img" aria-label="Category spending as share of income"></div>
+          <p class="text-xs text-slate-500 mb-3">Share of estimated monthly income by bucket (needs, wants, savings).</p>
+          <div id="budget-stack-wrap" class="w-full rounded-full overflow-hidden bg-slate-100 h-2.5 flex" role="img" aria-label="Spending split between needs, wants, and savings"></div>
           <p id="budget-stack-empty" class="text-sm text-slate-400 mt-2 hidden">Add category amounts to see the chart.</p>
+          <div id="budget-mix-legend" class="mt-3 grid grid-cols-3 gap-2 text-[11px] font-semibold"></div>
           <div id="budget-502020-stats" class="mt-4 space-y-2 text-sm"></div>
         </div>
 
@@ -668,6 +666,21 @@
             Bi-weekly pay cycles mean you receive 26 paychecks a year. We've calculated your monthly budget based on this annual average.
           </p>
         </div>
+
+        <!-- Saved Scenarios -->
+        <section class="saved-scenarios-card" aria-label="Saved scenarios">
+          <h3>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            Saved Scenarios
+          </h3>
+          <div class="input-row">
+            <input id="scenario-name" type="text" placeholder="e.g., Tighter rent month" />
+            <button id="save-scenario" type="button" class="save-btn">Save</button>
+          </div>
+          <div id="scenarios-list" class="scenarios-list">
+            <p class="scenarios-empty">No saved scenarios yet</p>
+          </div>
+        </section>
       </div>
     </div>
 
@@ -720,61 +733,9 @@
     </div>
   </div>
 
-  <!-- Mobile Bottom Navigation -->
-  <nav class="mobile-bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-lg z-50">
-    <div class="flex items-center justify-around py-2 px-1">
-      <a href="index.html" class="flex flex-col items-center gap-0.5 px-2 py-1.5 text-blue-600 min-w-0">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-        </svg>
-        <span class="text-[10px] font-semibold leading-tight text-center">Budget</span>
-      </a>
-      <a href="commission-breakdown.html" class="flex flex-col items-center gap-0.5 px-2 py-1.5 text-slate-500 min-w-0">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span class="text-[10px] font-semibold leading-tight text-center">Bonus</span>
-      </a>
-      <a href="loan-payoff.html" class="flex flex-col items-center gap-0.5 px-2 py-1.5 text-slate-500 min-w-0">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg>
-        <span class="text-[10px] font-semibold leading-tight text-center">Loan</span>
-      </a>
-      <a href="paycheck-calculator.html" class="flex flex-col items-center gap-0.5 px-2 py-1.5 text-slate-500 min-w-0">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
-        <span class="text-[10px] font-semibold leading-tight text-center">Paycheck</span>
-      </a>
-    </div>
-  </nav>
-
-  <!-- Global Footer -->
-  <footer class="bg-white border-t border-slate-200 py-6 mt-8">
-    <div class="max-w-5xl mx-auto px-4 md:px-8">
-      <div class="flex flex-col gap-4 text-sm text-slate-500 pb-28 md:pb-0">
-        <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs font-medium">
-          <a href="index.html" class="text-blue-600 font-semibold" aria-current="page">Budget</a>
-          <span class="text-slate-300" aria-hidden="true">·</span>
-          <a href="commission-breakdown.html" class="hover:text-blue-600">Bonus</a>
-          <span class="text-slate-300" aria-hidden="true">·</span>
-          <a href="loan-payoff.html" class="hover:text-blue-600">Loan</a>
-          <span class="text-slate-300" aria-hidden="true">·</span>
-          <a href="paycheck-calculator.html" class="hover:text-blue-600">Paycheck</a>
-        </div>
-        <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
-          <div class="flex items-center gap-2">
-            <span class="text-lg" aria-hidden="true">🔒</span>
-            <span>100% Private. Data stays on your device.</span>
-          </div>
-          <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs w-full md:w-auto border-t border-slate-100 pt-4 md:border-t-0 md:pt-0 md:pl-4 md:border-l md:border-slate-200">
-            <a href="about.html" class="hover:text-blue-600">About</a>
-            <span class="text-slate-300" aria-hidden="true">·</span>
-            <a href="privacy-policy.html" class="hover:text-blue-600">Privacy Policy</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
+  <!-- Mobile bottom nav + global footer (injected) -->
+  <div data-include="footer"></div>
+  <script src="js/includes.js" defer></script>
 
   <script>
     const STORAGE_KEY = "tb_budget_inputs";
@@ -786,8 +747,8 @@
       { id: "2", name: "Utilities", value: 271, type: "fixed", bucket: "needs" },
       { id: "3", name: "Groceries", value: 433, type: "fixed", bucket: "needs" },
       { id: "4", name: "Transportation", value: 379, type: "fixed", bucket: "needs" },
-      { id: "5", name: "Subscriptions", value: 271, type: "fixed", bucket: "wants" },
-      { id: "6", name: "Dining Out", value: 1354, type: "fixed", bucket: "wants" },
+      { id: "5", name: "Dining Out", value: 271, type: "fixed", bucket: "wants" },
+      { id: "6", name: "Subscriptions", value: 60, type: "fixed", bucket: "wants" },
       { id: "7", name: "Savings", value: 542, type: "fixed", bucket: "savings" },
       { id: "8", name: "Debt Payments", value: 542, type: "fixed", bucket: "savings" },
     ];
@@ -819,17 +780,13 @@
     }
 
     function flashSaved() {
+      if (!appReadyForSaveFlash) return;
+      if (typeof window.tbFlashSaved === "function") { window.tbFlashSaved(); return; }
       const el = document.getElementById("saved-flash");
-      if (!el || !appReadyForSaveFlash) return;
+      if (!el) return;
       el.hidden = false;
-      el.classList.remove("opacity-0");
-      el.classList.add("opacity-100");
       clearTimeout(saveFlashTimer);
-      saveFlashTimer = setTimeout(() => {
-        el.classList.remove("opacity-100");
-        el.classList.add("opacity-0");
-        setTimeout(() => { el.hidden = true; }, 220);
-      }, 1200);
+      saveFlashTimer = setTimeout(() => { el.hidden = true; }, 1100);
     }
 
     // Set pay frequency and update UI
@@ -1105,15 +1062,14 @@
       const wrap = document.getElementById("budget-stack-wrap");
       const emptyEl = document.getElementById("budget-stack-empty");
       const statsEl = document.getElementById("budget-502020-stats");
+      const legendEl = document.getElementById("budget-mix-legend");
       if (!wrap || !statsEl) return;
 
-      const rows = categories.map((cat) => ({
-        id: cat.id,
-        name: cat.name || "Category",
-        cost: Math.max(0, categoryCost(cat, netPay)),
-        bucket: normalizeBucket(cat.bucket),
-      }));
-      const totalCost = rows.reduce((s, r) => s + r.cost, 0);
+      const bucketTotals = { needs: 0, wants: 0, savings: 0 };
+      categories.forEach((cat) => {
+        bucketTotals[normalizeBucket(cat.bucket)] += Math.max(0, categoryCost(cat, netPay));
+      });
+      const totalCost = bucketTotals.needs + bucketTotals.wants + bucketTotals.savings;
 
       wrap.innerHTML = "";
       if (netPay <= 0 || totalCost <= 0) {
@@ -1121,24 +1077,36 @@
         statsEl.innerHTML = netPay <= 0
           ? "<p class=\"text-slate-500\">Enter after-tax pay to compare needs, wants, and savings to 50/30/20.</p>"
           : "";
+        if (legendEl) legendEl.innerHTML = "";
         return;
       }
       emptyEl.classList.add("hidden");
 
-      const share = (c) => (c / netPay) * 100;
-      rows.forEach((r) => {
-        const w = share(r.cost);
-        if (w <= 0) return;
+      // Match Total Expenses bar: width is share of NET PAY (not totalCost), so a fully
+      // unspent budget shows a partial bar — same scale as the progress bar above.
+      const segments = [
+        { key: "needs", label: "Needs", amount: bucketTotals.needs, color: BUCKET_SEG_COL.needs },
+        { key: "wants", label: "Wants", amount: bucketTotals.wants, color: BUCKET_SEG_COL.wants },
+        { key: "savings", label: "Savings", amount: bucketTotals.savings, color: BUCKET_SEG_COL.savings },
+      ];
+      segments.forEach((s) => {
+        if (s.amount <= 0) return;
+        const pctOfIncome = (s.amount / netPay) * 100;
         const seg = document.createElement("div");
-        seg.className = "h-full min-w-[2px] shrink transition-all";
-        seg.style.flex = `${Math.max(w, 0.001)} 1 0`;
-        seg.style.backgroundColor = BUCKET_SEG_COL[r.bucket] || BUCKET_SEG_COL.needs;
-        seg.title = `${r.name}: $${r.cost.toFixed(0)} (${w.toFixed(1)}% of income)`;
+        seg.className = "h-full transition-all";
+        seg.style.width = `${Math.min(pctOfIncome, 100)}%`;
+        seg.style.backgroundColor = s.color;
+        seg.title = `${s.label}: $${s.amount.toFixed(0)} (${pctOfIncome.toFixed(1)}% of income)`;
         wrap.appendChild(seg);
       });
 
-      const bucketTotals = { needs: 0, wants: 0, savings: 0 };
-      rows.forEach((r) => { bucketTotals[r.bucket] += r.cost; });
+      if (legendEl) {
+        legendEl.innerHTML = segments.map((s) => `
+          <div class="flex items-center gap-1.5 min-w-0">
+            <span class="inline-block w-2.5 h-2.5 rounded-sm shrink-0" style="background:${s.color}"></span>
+            <span class="text-slate-600 truncate">${s.label} ${((s.amount / Math.max(netPay, 1)) * 100).toFixed(0)}%</span>
+          </div>`).join("");
+      }
 
       const pct = (n) => (netPay > 0 ? (n / netPay) * 100 : 0);
       const nPct = pct(bucketTotals.needs);
@@ -1507,6 +1475,9 @@
       document.getElementById("monthly-income-display").innerText =
         `$${Math.round(netPay).toLocaleString()}`;
 
+      const statIncome = document.getElementById("stat-monthly-income");
+      if (statIncome) statIncome.textContent = `$${Math.round(netPay).toLocaleString()}`;
+
       let totalSpent = 0;
       categories.forEach((cat) => {
         const cost = categoryCost(cat, netPay);
@@ -1529,6 +1500,16 @@
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         })}`;
+
+      const statTotal = document.getElementById("stat-total-expenses");
+      if (statTotal) statTotal.textContent = `$${Math.round(totalSpent).toLocaleString()}`;
+      const statRem = document.getElementById("stat-remaining");
+      if (statRem) {
+        statRem.textContent = `$${Math.round(remaining).toLocaleString()}`;
+        statRem.classList.remove("is-positive", "is-negative");
+        if (remaining < -0.5) statRem.classList.add("is-negative");
+        else if (remaining > 0.5) statRem.classList.add("is-positive");
+      }
 
       const progressBar = document.getElementById("progress-bar");
       progressBar.style.width = `${Math.min(percentSpent, 100)}%`;
@@ -1565,15 +1546,115 @@
       updateThreePaycheckCard();
     }
 
+    function clearAllCategories() {
+      if (!confirm("Clear all categories? This will leave the budget empty.")) return;
+      categories = [];
+      renderCategories();
+      updateUI();
+      saveState();
+    }
+    window.clearAllCategories = clearAllCategories;
+
+    // ============ SAVED SCENARIOS ============
+    const SCENARIOS_KEY = "tb_budget_scenarios";
+
+    function getAllScenarios() {
+      const raw = localStorage.getItem(SCENARIOS_KEY);
+      return raw ? safeParseJSON(raw) || {} : {};
+    }
+
+    function saveScenario(name) {
+      const trimmed = (name || "").trim();
+      if (!trimmed) { alert("Please enter a scenario name"); return; }
+      const desk = document.getElementById("bi-weekly-input");
+      const biWeeklyPay = desk ? Number(desk.value) || 0 : 0;
+      const scenarios = getAllScenarios();
+      scenarios[trimmed] = {
+        biWeeklyPay,
+        payFrequency,
+        categories: categories.map(normalizeCategory),
+        savedAt: new Date().toISOString(),
+      };
+      localStorage.setItem(SCENARIOS_KEY, JSON.stringify(scenarios));
+      renderScenariosList();
+      const inp = document.getElementById("scenario-name");
+      if (inp) inp.value = "";
+    }
+
+    function loadScenario(name) {
+      const scenarios = getAllScenarios();
+      const data = scenarios[name];
+      if (!data) return;
+      const desk = document.getElementById("bi-weekly-input");
+      const mob = document.getElementById("bi-weekly-input-mobile");
+      if (desk && typeof data.biWeeklyPay === "number") desk.value = String(data.biWeeklyPay);
+      if (mob && typeof data.biWeeklyPay === "number") mob.value = String(data.biWeeklyPay);
+      if (data.payFrequency === "bi-weekly" || data.payFrequency === "semi-monthly") {
+        payFrequency = data.payFrequency;
+        setPayFrequency(payFrequency);
+      }
+      if (Array.isArray(data.categories)) {
+        categories = data.categories.map(normalizeCategory);
+      }
+      renderCategories();
+      updateUI();
+      saveState();
+    }
+
+    function deleteScenario(name) {
+      if (!confirm(`Delete scenario "${name}"?`)) return;
+      const scenarios = getAllScenarios();
+      delete scenarios[name];
+      localStorage.setItem(SCENARIOS_KEY, JSON.stringify(scenarios));
+      renderScenariosList();
+    }
+
+    function renderScenariosList() {
+      const list = document.getElementById("scenarios-list");
+      if (!list) return;
+      const scenarios = getAllScenarios();
+      const names = Object.keys(scenarios);
+      if (names.length === 0) {
+        list.innerHTML = '<p class="scenarios-empty">No saved scenarios yet</p>';
+        return;
+      }
+      list.innerHTML = names.map((name) => {
+        const data = scenarios[name];
+        const date = data.savedAt ? new Date(data.savedAt).toLocaleDateString() : "";
+        const safe = name.replace(/'/g, "\\'");
+        return `
+          <div class="scenario-item">
+            <div class="scenario-info" onclick="loadScenario('${safe}')">
+              <div class="scenario-name">${escapeHtml(name)}</div>
+              <div class="scenario-meta">${date} &middot; ${(data.categories || []).length} categories</div>
+            </div>
+            <button class="scenario-delete" onclick="event.stopPropagation(); deleteScenario('${safe}')" aria-label="Delete scenario">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+            </button>
+          </div>`;
+      }).join("");
+    }
+
+    window.loadScenario = loadScenario;
+    window.deleteScenario = deleteScenario;
+
     window.onload = () => {
       loadState();
       setPayFrequency(payFrequency); // Initialize toggle UI
       syncBiWeeklyInputs('desktop'); // Sync mobile input on load
       renderCategories();
       updateUI();
+      renderScenariosList();
       lucide.createIcons();
       saveState();
       appReadyForSaveFlash = true;
+
+      document.getElementById("save-scenario")?.addEventListener("click", () => {
+        saveScenario(document.getElementById("scenario-name").value);
+      });
+      document.getElementById("scenario-name")?.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") saveScenario(e.currentTarget.value);
+      });
     };
   </script>
 </body>

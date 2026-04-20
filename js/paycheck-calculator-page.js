@@ -221,6 +221,15 @@ function recalc() {
   el("res-net-annual", formatMoneyCents(netAnnual));
   el("res-gross-annual", formatMoneyCents(grossAnnual));
 
+  // Stat-row mirrors (template-aligned IDs).
+  el("stat-gross-hourly", formatMoneyCents(grossHourly));
+  el("stat-net-hourly", formatMoneyCents(netHourly));
+  el("stat-effective-rate", formatPct(effectiveRate));
+
+  // 3-paycheck-months callout: extra check ≈ net per paycheck; year total ≈ 2× extra.
+  el("three-paycheck-extra", formatMoney(netPerPay));
+  el("three-paycheck-yearly", formatMoney(netPerPay * 2));
+
   setBarWidths(federal, st, fica, grossAnnual);
 
   el("eat-fed-amt", formatMoneyCents(federal));
@@ -270,6 +279,136 @@ function populateStates() {
   }
 }
 
+/* ============ SAVED SCENARIOS ============ */
+const SCENARIOS_KEY = "tb_paycheck_scenarios";
+
+function safeParse(str) { try { return JSON.parse(str); } catch { return null; } }
+function escapeHtml(str) {
+  return String(str ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+function getAllScenarios() {
+  const raw = localStorage.getItem(SCENARIOS_KEY);
+  return raw ? safeParse(raw) || {} : {};
+}
+
+function snapshotInputs() {
+  return {
+    pay: Number(document.getElementById("pay-amount").value) || 0,
+    payType: document.querySelector('input[name="pay-type"]:checked')?.value || "gross",
+    freq: document.getElementById("pay-frequency").value,
+    hours: Number(document.getElementById("hours-week").value) || 40,
+    state: document.getElementById("state-select").value,
+    filing: document.getElementById("filing-status").value,
+    pretax: Number(document.getElementById("pretax-deductions").value) || 0,
+    year: document.getElementById("tax-year").value,
+  };
+}
+
+function applyInputs(s) {
+  if (!s) return;
+  const set = (id, v) => { const n = document.getElementById(id); if (n != null && v != null) n.value = String(v); };
+  set("pay-amount", s.pay);
+  set("pay-frequency", s.freq);
+  set("hours-week", s.hours);
+  set("state-select", s.state);
+  set("filing-status", s.filing);
+  set("pretax-deductions", s.pretax);
+  set("tax-year", s.year);
+  const radio = document.querySelector(`input[name="pay-type"][value="${s.payType || "gross"}"]`);
+  if (radio) radio.checked = true;
+  recalc();
+}
+
+function saveScenario(name) {
+  const trimmed = (name || "").trim();
+  if (!trimmed) { alert("Please enter a scenario name"); return; }
+  const scenarios = getAllScenarios();
+  scenarios[trimmed] = { ...snapshotInputs(), savedAt: new Date().toISOString() };
+  localStorage.setItem(SCENARIOS_KEY, JSON.stringify(scenarios));
+  renderScenariosList();
+  const inp = document.getElementById("scenario-name");
+  if (inp) inp.value = "";
+}
+
+function loadScenario(name) {
+  const data = getAllScenarios()[name];
+  if (data) applyInputs(data);
+}
+
+function deleteScenario(name) {
+  if (!confirm(`Delete scenario "${name}"?`)) return;
+  const scenarios = getAllScenarios();
+  delete scenarios[name];
+  localStorage.setItem(SCENARIOS_KEY, JSON.stringify(scenarios));
+  renderScenariosList();
+}
+
+function renderScenariosList() {
+  const list = document.getElementById("scenarios-list");
+  if (!list) return;
+  const scenarios = getAllScenarios();
+  const names = Object.keys(scenarios);
+  if (names.length === 0) {
+    list.innerHTML = '<p class="scenarios-empty">No saved scenarios yet</p>';
+    return;
+  }
+  list.innerHTML = names.map((name) => {
+    const data = scenarios[name];
+    const date = data.savedAt ? new Date(data.savedAt).toLocaleDateString() : "";
+    const safe = name.replace(/'/g, "\\'");
+    const meta = `${data.state || ""} &middot; ${data.filing || ""} &middot; ${date}`;
+    return `
+      <div class="scenario-item">
+        <div class="scenario-info" onclick="window.tbLoadPaycheckScenario('${safe}')">
+          <div class="scenario-name">${escapeHtml(name)}</div>
+          <div class="scenario-meta">${meta}</div>
+        </div>
+        <button class="scenario-delete" onclick="event.stopPropagation(); window.tbDeletePaycheckScenario('${safe}')" aria-label="Delete scenario">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        </button>
+      </div>`;
+  }).join("");
+}
+
+window.tbLoadPaycheckScenario = loadScenario;
+window.tbDeletePaycheckScenario = deleteScenario;
+
+/* ============ EXPORT CSV ============ */
+function exportCsv() {
+  const get = (id) => document.getElementById(id)?.textContent ?? "";
+  const inputs = snapshotInputs();
+  const rows = [
+    ["Setting", "Value"],
+    ["Pay amount", inputs.pay],
+    ["Pay type", inputs.payType],
+    ["Frequency", inputs.freq],
+    ["Hours/week", inputs.hours],
+    ["State", inputs.state],
+    ["Filing status", inputs.filing],
+    ["Pre-tax/paycheck", inputs.pretax],
+    ["Tax year", inputs.year],
+    [""],
+    ["Result", "Value"],
+    ["Gross hourly", get("res-gross-hourly")],
+    ["Net hourly", get("res-net-hourly")],
+    ["Effective tax rate", get("res-effective-rate")],
+    ["Estimated gross (annual)", get("res-gross-annual")],
+    ["Net per paycheck", get("res-net-per-pay")],
+    ["Net monthly", get("res-net-monthly")],
+    ["Net annual", get("res-net-annual")],
+    ["Federal", get("eat-fed-amt")],
+    ["State", get("eat-state-amt")],
+    ["FICA", get("eat-fica-amt")],
+  ];
+  const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `paycheck-${new Date().toISOString().split("T")[0]}.csv`;
+  link.click();
+}
+
 function wire() {
   populateStates();
   const ids = ["pay-amount", "pay-frequency", "hours-week", "state-select", "filing-status", "pretax-deductions", "tax-year"];
@@ -279,6 +418,16 @@ function wire() {
     if (n) n.addEventListener("change", recalc);
   }
   document.querySelectorAll('input[name="pay-type"]').forEach((r) => r.addEventListener("change", recalc));
+
+  document.getElementById("save-scenario")?.addEventListener("click", () => {
+    saveScenario(document.getElementById("scenario-name").value);
+  });
+  document.getElementById("scenario-name")?.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") saveScenario(e.currentTarget.value);
+  });
+  document.getElementById("paycheck-csv")?.addEventListener("click", exportCsv);
+
+  renderScenariosList();
   recalc();
 }
 

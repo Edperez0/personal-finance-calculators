@@ -1,0 +1,76 @@
+/* TransparentBudget design tokens.
+ * Single source of truth for color, spacing, type, and radii.
+ * Sheets and pages reference values via var(--token) so theming
+ * stays one-file deep.
+ */
+:root {
+  /* Brand and semantic colors */
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-soft: #eff6ff;
+
+  --color-success: #059669;
+  --color-success-soft: #ecfdf5;
+
+  --color-warning: #d97706;
+  --color-warning-soft: #fffbeb;
+
+  --color-danger: #dc2626;
+  --color-danger-soft: #fef2f2;
+
+  /* Budget bucket colors (use across budget mix bar, pills, legends) */
+  --color-needs: #059669;    /* green */
+  --color-wants: #d97706;    /* amber */
+  --color-savings: #2563eb;  /* blue */
+
+  /* Neutral surface and ink */
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+  --color-ink: #0f172a;
+  --color-ink-muted: #475569;
+  --color-ink-soft: #64748b;
+  --color-ink-faint: #94a3b8;
+
+  /* Spacing scale (4-pt rhythm) */
+  --space-xs: 0.25rem;   /* 4 */
+  --space-sm: 0.5rem;    /* 8 */
+  --space-md: 1rem;      /* 16 */
+  --space-lg: 1.5rem;    /* 24 */
+  --space-xl: 2rem;      /* 32 */
+  --space-2xl: 3rem;     /* 48 */
+
+  /* Radii */
+  --radius-sm: 0.5rem;     /* 8 */
+  --radius-md: 0.75rem;    /* 12 */
+  --radius-lg: 1rem;       /* 16 */
+  --radius-xl: 1.5rem;     /* 24 */
+  --radius-pill: 9999px;
+
+  /* Type families */
+  --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segment UI Emoji", sans-serif;
+  --font-display: var(--font-body);
+
+  /* Type scale (helpers; pages mostly use Tailwind utilities) */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+
+  /* Layout rhythm shared across calculator pages */
+  --page-max-width: 64rem;          /* matches max-w-5xl */
+  --page-gutter: 1rem;
+  --page-gutter-md: 2rem;
+  --grid-gap: 2rem;                 /* space between sidebar/main on desktop */
+  --section-gap: 1.5rem;            /* between major blocks (stat row, table, scenarios) */
+  --card-pad: 1.5rem;               /* p-6 default */
+  --card-pad-sm: 1rem;              /* p-4 */
+
+  /* Shadows */
+  --shadow-card: 0 1px 2px 0 rgb(15 23 42 / 0.06);
+  --shadow-card-hover: 0 4px 16px -6px rgb(15 23 42 / 0.12);
+}

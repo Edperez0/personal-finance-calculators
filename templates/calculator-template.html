@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<!--
+  TransparentBudget calculator template.
+
+  Copy this file to a new top-level page (e.g. retirement-calculator.html),
+  fill in the SEO placeholders, swap the calculator-specific markup,
+  and the layout chrome will already match every existing tool.
+
+  HARD RULES (do not skip):
+    - Keep <title>, meta description, OG tags, JSON-LD, and the <h1>
+      in this page itself. Crawlers and no-JS clients see them directly.
+    - Site nav, footer, and the "Saved to this device" chip are loaded by
+      js/includes.js from /partials/. Do not duplicate that markup here.
+    - Always have exactly THREE stat cards and exactly TWO related
+      calculators, matching the rest of the site.
+    - Use the shared layout classes from css/site-layout.css instead of
+      reinventing card/grid styles. Tailwind utilities are fine for
+      one-off spacing inside a card.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- TODO: Replace SEO placeholders. -->
+  <title>NEW Calculator Name | TransparentBudget</title>
+  <meta name="description" content="One-line value prop for this tool, under ~155 chars. Plain language, no keyword stuffing." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://transparentbudget.com/NEW-PATH.html" />
+  <meta property="og:title" content="NEW Calculator Name | TransparentBudget" />
+  <meta property="og:description" content="Same one-liner as meta description." />
+  <meta property="og:url" content="https://transparentbudget.com/NEW-PATH.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="TransparentBudget" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "TransparentBudget NEW Calculator Name",
+    "url": "https://transparentbudget.com/NEW-PATH.html",
+    "description": "One- or two-sentence description of what the tool does.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128176;</text></svg>">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/site-layout.css" />
+</head>
+
+<!-- data-active-nav drives the highlighted pill in the injected nav.
+     Use one of: budget | bonus | loan | paycheck | about | privacy. -->
+<body class="bg-slate-50 text-slate-900 font-sans flex flex-col min-h-screen" data-active-nav="REPLACE_NAV_KEY">
+
+  <!-- INJECTED HEADER (sticky top nav + mobile bottom nav) -->
+  <div data-include="header"></div>
+
+  <main class="page-shell flex-1 w-full">
+
+    <!-- PAGE TITLE ROW: static H1 stack on the left, injected device chip on the right. -->
+    <header class="page-title-row">
+      <div class="page-title-stack">
+        <h1>NEW Calculator Name</h1>
+        <p class="page-last-updated">Last updated: April 2026</p>
+        <p class="page-subhead">
+          One plain-English sentence about what this tool does. Skip bolded keywords here.
+        </p>
+      </div>
+      <div data-include="page-header"></div>
+    </header>
+
+    <!-- HERO INPUTS CARD (full width, primary inputs for the calculator). -->
+    <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6" aria-label="Inputs">
+      <h2 class="text-lg font-bold text-slate-800 mb-4">Your numbers</h2>
+      <!-- TODO: replace with the calculator's primary inputs. -->
+    </section>
+
+    <!-- STAT CARDS ROW (always exactly 3). -->
+    <section class="stat-row" aria-label="Top results">
+      <div class="stat-card">
+        <span class="stat-card__icon is-blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </span>
+        <div class="stat-card__body">
+          <p class="stat-card__label">Stat one</p>
+          <p class="stat-card__value" id="stat-one">$0</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card__icon is-green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M5 9l7-7 7 7"/></svg>
+        </span>
+        <div class="stat-card__body">
+          <p class="stat-card__label">Stat two</p>
+          <p class="stat-card__value" id="stat-two">$0</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card__icon is-amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+        </span>
+        <div class="stat-card__body">
+          <p class="stat-card__label">Stat three</p>
+          <p class="stat-card__value" id="stat-three">0%</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN GRID: 65/35 on desktop (8/4 of 12 columns), single column on mobile. -->
+    <div class="calc-grid">
+      <div class="calc-main">
+        <!-- Primary breakdown / table / chart for this calculator. -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6" aria-label="Breakdown">
+          <h2 class="text-lg font-bold text-slate-800 mb-4">Breakdown</h2>
+          <p class="text-sm text-slate-500">TODO: primary table or chart goes here.</p>
+          <p class="calc-disclaimer">Estimates only. Verify with an accountant or payroll for tax-sensitive decisions.</p>
+        </section>
+
+        <!-- EXPORT BAR: Share Link / CSV / PDF (premium). -->
+        <div class="export-bar" aria-label="Export options">
+          <p class="export-bar__title">Export</p>
+          <div class="export-bar__actions">
+            <button type="button" class="export-bar__btn" onclick="window.tbCopyShareLink && window.tbCopyShareLink()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              Share Link
+            </button>
+            <button type="button" id="export-csv" class="export-bar__btn is-csv">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              CSV
+            </button>
+            <button type="button" id="export-pdf" class="export-bar__btn is-premium" disabled aria-disabled="true" title="PDF export is coming with TransparentBudget Premium.">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              PDF<span class="export-bar__premium-pill">Premium</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="calc-sidebar">
+        <!-- Sidebar cards: visualization, supporting metrics, callouts. -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <h3 class="font-bold text-slate-800 mb-2">Details</h3>
+          <p class="text-sm text-slate-500">TODO: secondary metrics list.</p>
+        </section>
+
+        <!-- SAVED SCENARIOS (named snapshots; per-tool localStorage key). -->
+        <section class="saved-scenarios-card">
+          <h3>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            Saved Scenarios
+          </h3>
+          <div class="input-row">
+            <input id="scenario-name" type="text" placeholder="e.g., Base case" />
+            <button id="save-scenario" type="button" class="save-btn">Save</button>
+          </div>
+          <div id="scenarios-list" class="scenarios-list">
+            <p class="scenarios-empty">No saved scenarios yet</p>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <!-- ABOUT THIS CALCULATOR -->
+    <section class="seo-intro mt-10" aria-labelledby="about-heading">
+      <h2 id="about-heading" class="text-xl font-bold text-slate-800 mb-3">About This Calculator</h2>
+      <p class="text-slate-600 leading-relaxed">
+        Brief plain-language explanation of what the tool does and who it is for.
+      </p>
+    </section>
+
+    <!-- RELATED CALCULATORS (always exactly 2 cards) -->
+    <section class="mt-8" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="text-xl font-bold text-slate-800 mb-4">Related Calculators</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <a href="index.html" class="block bg-white rounded-xl border border-slate-200 p-4 hover:border-blue-300 hover:shadow-sm transition-all">
+          <h3 class="font-bold text-slate-800">Budget Planner</h3>
+          <p class="text-sm text-slate-600 mt-1">Plan monthly spending from bi-weekly or twice-a-month pay.</p>
+        </a>
+        <a href="commission-breakdown.html" class="block bg-white rounded-xl border border-slate-200 p-4 hover:border-blue-300 hover:shadow-sm transition-all">
+          <h3 class="font-bold text-slate-800">Bonus Breakdown</h3>
+          <p class="text-sm text-slate-600 mt-1">Split a lump bonus across goals with dollar amounts.</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- FAQ ACCORDION -->
+    <section class="seo-faq mt-10" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">Frequently Asked Questions</h2>
+      <details>
+        <summary>Question one?</summary>
+        <div class="faq-answer">Plain answer.</div>
+      </details>
+      <details>
+        <summary>Question two?</summary>
+        <div class="faq-answer">Plain answer.</div>
+      </details>
+    </section>
+  </main>
+
+  <!-- INJECTED FOOTER -->
+  <div data-include="footer"></div>
+
+  <script src="js/includes.js" defer></script>
+  <!-- TODO: Page-specific script(s) here. -->
+</body>
+</html>

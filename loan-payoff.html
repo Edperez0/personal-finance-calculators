@@ -75,6 +75,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/site-layout.css" />
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -541,7 +543,7 @@
   </style>
 </head>
 
-<body class="bg-slate-50 text-slate-900 font-sans flex flex-col min-h-screen">
+<body class="bg-slate-50 text-slate-900 font-sans flex flex-col min-h-screen" data-active-nav="loan">
   <!-- Mobile Sticky Summary (hidden on desktop) -->
   <div class="mobile-sticky-summary fixed top-0 left-0 right-0 bg-white border-b border-slate-200 shadow-sm z-40 px-4 py-3">
     <div class="flex items-center justify-between text-sm">
@@ -556,39 +558,20 @@
     </div>
   </div>
 
-  <!-- Sticky Navigation Bar -->
-  <nav class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
-    <div class="max-w-5xl mx-auto px-4 md:px-8 py-4">
-      <div class="flex flex-wrap items-center gap-2">
-        <a href="index.html" class="px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">
-          Budget Planner
-        </a>
-        <a href="commission-breakdown.html" class="px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">
-          Bonus
-        </a>
-        <a href="loan-payoff.html" class="px-4 py-2 rounded-full font-semibold text-sm transition-all bg-blue-600 text-white">
-          Loan Payoff
-        </a>
-        <a href="paycheck-calculator.html" class="px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">
-          Paycheck
-        </a>
-        <span class="hidden sm:inline w-px h-5 bg-slate-200 shrink-0" aria-hidden="true"></span>
-        <div class="flex items-center gap-1 sm:gap-2 text-sm">
-          <a href="about.html" class="px-2 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 hover:text-blue-600">About</a>
-          <a href="privacy-policy.html" class="px-2 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 hover:text-blue-600">Privacy</a>
-        </div>
-      </div>
-    </div>
-  </nav>
+  <!-- Site nav (injected from /partials/header.html) -->
+  <div data-include="header"></div>
 
   <div class="p-4 md:p-8 flex-1">
     <div class="max-w-5xl mx-auto">
       <input id="debug-toggle" type="checkbox" class="hidden" aria-hidden="true">
-      <!-- Header -->
-      <div class="seo-intro mb-8" aria-labelledby="seo-loan-heading">
-        <h1 id="seo-loan-heading">Loan Payoff Calculator</h1>
-        <p class="text-sm text-slate-500 mt-2">Last updated: April 2026</p>
-      </div>
+      <!-- Page title row -->
+      <header class="page-title-row" aria-labelledby="seo-loan-heading">
+        <div class="page-title-stack">
+          <h1 id="seo-loan-heading">Loan Payoff Calculator</h1>
+          <p class="page-last-updated">Last updated: April 2026</p>
+        </div>
+        <div data-include="page-header"></div>
+      </header>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Sidebar: Inputs -->
@@ -785,21 +768,7 @@
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center flex-wrap gap-2">
             <h3 class="font-semibold text-slate-700">Monthly Projected Schedule</h3>
-            <div class="flex gap-2 items-center">
-              <button id="export-csv" class="px-3 py-1 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all text-xs font-bold uppercase flex items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-                CSV
-              </button>
-              <button id="export-pdf" class="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all text-xs font-bold uppercase flex items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-                PDF
-              </button>
-              <span id="duration-tag" class="text-[10px] font-bold px-3 py-1 bg-blue-100 text-blue-600 rounded-full uppercase"></span>
-            </div>
+            <span id="duration-tag" class="text-[10px] font-bold px-3 py-1 bg-blue-100 text-blue-600 rounded-full uppercase"></span>
           </div>
           <div class="overflow-x-auto max-h-[450px] custom-scrollbar">
             <table class="w-full text-left border-collapse">
@@ -814,6 +783,25 @@
               </thead>
               <tbody id="schedule-body" class="text-xs text-slate-600"></tbody>
             </table>
+          </div>
+        </div>
+
+        <!-- Unified export bar (Share / CSV / PDF-as-premium) -->
+        <div class="export-bar" aria-label="Export options">
+          <p class="export-bar__title">Export</p>
+          <div class="export-bar__actions">
+            <button type="button" class="export-bar__btn" onclick="window.tbCopyShareLink && window.tbCopyShareLink()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              Share Link
+            </button>
+            <button type="button" id="export-csv" class="export-bar__btn is-csv">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              CSV
+            </button>
+            <button type="button" id="export-pdf" class="export-bar__btn is-premium" disabled aria-disabled="true" title="PDF export is part of TransparentBudget Premium (coming soon).">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              PDF<span class="export-bar__premium-pill">Premium</span>
+            </button>
           </div>
         </div>
       </div>
@@ -870,61 +858,9 @@
   </div>
   </div>
 
-  <!-- Mobile Bottom Navigation -->
-  <nav class="mobile-bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-lg z-50">
-    <div class="flex items-center justify-around py-2 px-1">
-      <a href="index.html" class="flex flex-col items-center gap-0.5 px-2 py-1.5 text-slate-500 min-w-0">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-        </svg>
-        <span class="text-[10px] font-semibold leading-tight text-center">Budget</span>
-      </a>
-      <a href="commission-breakdown.html" class="flex flex-col items-center gap-0.5 px-2 py-1.5 text-slate-500 min-w-0">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span class="text-[10px] font-semibold leading-tight text-center">Bonus</span>
-      </a>
-      <a href="loan-payoff.html" class="flex flex-col items-center gap-0.5 px-2 py-1.5 text-blue-600 min-w-0">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg>
-        <span class="text-[10px] font-semibold leading-tight text-center">Loan</span>
-      </a>
-      <a href="paycheck-calculator.html" class="flex flex-col items-center gap-0.5 px-2 py-1.5 text-slate-500 min-w-0">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
-        <span class="text-[10px] font-semibold leading-tight text-center">Paycheck</span>
-      </a>
-    </div>
-  </nav>
-
-  <!-- Global Footer -->
-  <footer class="bg-white border-t border-slate-200 py-6 mt-8">
-    <div class="max-w-5xl mx-auto px-4 md:px-8">
-      <div class="flex flex-col gap-4 text-sm text-slate-500 pb-28 md:pb-0">
-        <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs font-medium">
-          <a href="index.html" class="hover:text-blue-600">Budget</a>
-          <span class="text-slate-300" aria-hidden="true">·</span>
-          <a href="commission-breakdown.html" class="hover:text-blue-600">Bonus</a>
-          <span class="text-slate-300" aria-hidden="true">·</span>
-          <a href="loan-payoff.html" class="text-blue-600 font-semibold" aria-current="page">Loan</a>
-          <span class="text-slate-300" aria-hidden="true">·</span>
-          <a href="paycheck-calculator.html" class="hover:text-blue-600">Paycheck</a>
-        </div>
-        <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
-          <div class="flex items-center gap-2">
-            <span class="text-lg" aria-hidden="true">🔒</span>
-            <span>100% Private. Data stays on your device.</span>
-          </div>
-          <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs w-full md:w-auto border-t border-slate-100 pt-4 md:border-t-0 md:pt-0 md:pl-4 md:border-l md:border-slate-200">
-            <a href="about.html" class="hover:text-blue-600">About</a>
-            <span class="text-slate-300" aria-hidden="true">·</span>
-            <a href="privacy-policy.html" class="hover:text-blue-600">Privacy Policy</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
+  <!-- Mobile bottom nav + global footer (injected from /partials/) -->
+  <div data-include="footer"></div>
+  <script src="js/includes.js" defer></script>
 
   <script>
     const TB_LOAN_INPUTS_KEY = 'tb_loan_inputs';
