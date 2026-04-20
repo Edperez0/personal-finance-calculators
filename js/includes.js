@@ -42,24 +42,24 @@
       ? document.body.dataset.activeNav
       : null;
     if (!activeKey) return;
-    const topLink = rootHost.querySelector(`[data-tb-nav] a[data-nav-key="${activeKey}"]`);
-    if (topLink) {
+    const topLinks = rootHost.querySelectorAll(`[data-tb-nav] a[data-nav-key="${activeKey}"]`);
+    topLinks.forEach((topLink) => {
       topLink.classList.remove('text-slate-700', 'hover:bg-slate-100');
       topLink.classList.add('bg-blue-600', 'text-white');
       topLink.setAttribute('aria-current', 'page');
-    }
+    });
     const bottomLink = rootHost.querySelector(`[data-tb-mobile-nav] a[data-nav-key="${activeKey}"]`);
     if (bottomLink) {
       bottomLink.classList.remove('text-slate-500');
       bottomLink.classList.add('text-blue-600');
       bottomLink.setAttribute('aria-current', 'page');
     }
-    const footerLink = document.querySelector(`[data-tb-footer-nav] a[data-nav-key="${activeKey}"]`);
-    if (footerLink) {
+    const footerLinks = document.querySelectorAll(`[data-tb-footer-nav] a[data-nav-key="${activeKey}"]`);
+    footerLinks.forEach((footerLink) => {
       footerLink.classList.remove('hover:text-blue-600');
       footerLink.classList.add('text-blue-600', 'font-semibold');
       footerLink.setAttribute('aria-current', 'page');
-    }
+    });
   }
 
   async function injectAll() {
@@ -73,10 +73,47 @@
       }),
     );
     document.querySelectorAll('[data-include]').forEach((host) => markActiveNav(host));
+    wireMobileNav();
     document.dispatchEvent(new CustomEvent('tb:partials-loaded'));
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       try { window.lucide.createIcons(); } catch (_) { /* noop */ }
     }
+  }
+
+  function wireMobileNav() {
+    const toggle = document.getElementById('tb-nav-toggle');
+    const closeBtn = document.getElementById('tb-nav-close');
+    const panel = document.getElementById('tb-mobile-panel');
+    const backdrop = document.getElementById('tb-mobile-backdrop');
+    if (!toggle || !panel || !backdrop) return;
+
+    function openPanel() {
+      panel.removeAttribute('inert');
+      // Force a layout pass so the transform transitions on .is-open add.
+      panel.classList.add('is-open');
+      backdrop.classList.add('is-open');
+      toggle.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('tb-nav-open');
+    }
+    function closePanel() {
+      panel.classList.remove('is-open');
+      backdrop.classList.remove('is-open');
+      panel.setAttribute('inert', '');
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('tb-nav-open');
+    }
+
+    toggle.addEventListener('click', () => {
+      if (panel.classList.contains('is-open')) closePanel(); else openPanel();
+    });
+    if (closeBtn) closeBtn.addEventListener('click', closePanel);
+    backdrop.addEventListener('click', closePanel);
+    panel.querySelectorAll('a[href]').forEach((link) => {
+      link.addEventListener('click', closePanel);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && panel.classList.contains('is-open')) closePanel();
+    });
   }
 
   if (document.readyState === 'loading') {

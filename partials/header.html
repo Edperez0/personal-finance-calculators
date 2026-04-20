@@ -1,15 +1,64 @@
-<nav class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm" data-tb-nav>
+<nav class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
   <div class="max-w-5xl mx-auto px-4 md:px-8 py-3 md:py-4">
-    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar -mx-1 px-1">
-      <a href="index.html" data-nav-key="budget" class="whitespace-nowrap px-3 md:px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">Budget Planner</a>
-      <a href="commission-breakdown.html" data-nav-key="bonus" class="whitespace-nowrap px-3 md:px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">Bonus</a>
-      <a href="loan-payoff.html" data-nav-key="loan" class="whitespace-nowrap px-3 md:px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">Loan Payoff</a>
-      <a href="paycheck-calculator.html" data-nav-key="paycheck" class="whitespace-nowrap px-3 md:px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">Paycheck</a>
-      <span class="hidden sm:inline w-px h-5 bg-slate-200 shrink-0" aria-hidden="true"></span>
-      <div class="hidden sm:flex items-center gap-1 sm:gap-2 text-sm">
-        <a href="about.html" data-nav-key="about" class="px-2 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 hover:text-blue-600">About</a>
-        <a href="privacy-policy.html" data-nav-key="privacy" class="px-2 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 hover:text-blue-600">Privacy</a>
+    <div class="flex items-center gap-2">
+      <a href="index.html"
+         class="md:hidden font-bold text-base text-slate-800 hover:text-blue-600 mr-auto"
+         aria-label="TransparentBudget home">TransparentBudget</a>
+
+      <div class="hidden md:flex items-center gap-2 overflow-x-auto no-scrollbar -mx-1 px-1 w-full" data-tb-nav>
+        <a href="index.html" data-nav-key="budget" class="whitespace-nowrap px-3 md:px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">Budget Planner</a>
+        <a href="commission-breakdown.html" data-nav-key="bonus" class="whitespace-nowrap px-3 md:px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">Bonus</a>
+        <a href="loan-payoff.html" data-nav-key="loan" class="whitespace-nowrap px-3 md:px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">Loan Payoff</a>
+        <a href="paycheck-calculator.html" data-nav-key="paycheck" class="whitespace-nowrap px-3 md:px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">Paycheck</a>
+        <span class="hidden sm:inline w-px h-5 bg-slate-200 shrink-0" aria-hidden="true"></span>
+        <div class="hidden sm:flex items-center gap-1 sm:gap-2 text-sm">
+          <a href="about.html" data-nav-key="about" class="px-2 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 hover:text-blue-600">About</a>
+          <a href="privacy-policy.html" data-nav-key="privacy" class="px-2 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 hover:text-blue-600">Privacy</a>
+        </div>
       </div>
+
+      <button type="button"
+              id="tb-nav-toggle"
+              class="md:hidden inline-flex items-center justify-center rounded-lg p-2 text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="Open menu"
+              aria-expanded="false"
+              aria-controls="tb-mobile-panel">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="4" y1="6" x2="20" y2="6"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="18" x2="20" y2="18"></line>
+        </svg>
+      </button>
     </div>
   </div>
 </nav>
+
+<div id="tb-mobile-backdrop" class="tb-mobile-backdrop md:hidden" aria-hidden="true"></div>
+<aside id="tb-mobile-panel"
+       class="tb-mobile-panel md:hidden"
+       role="dialog"
+       aria-modal="true"
+       aria-label="Site navigation"
+       inert>
+  <div class="tb-mobile-panel__head">
+    <span class="font-bold text-base text-slate-800">Menu</span>
+    <button type="button"
+            id="tb-nav-close"
+            class="inline-flex items-center justify-center rounded-lg p-2 text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Close menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+  <nav class="tb-mobile-panel__list" data-tb-nav data-tb-mobile-panel-nav>
+    <a href="index.html" data-nav-key="budget" class="tb-mobile-link whitespace-nowrap px-3 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">Budget Planner</a>
+    <a href="commission-breakdown.html" data-nav-key="bonus" class="tb-mobile-link whitespace-nowrap px-3 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">Bonus</a>
+    <a href="loan-payoff.html" data-nav-key="loan" class="tb-mobile-link whitespace-nowrap px-3 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">Loan Payoff</a>
+    <a href="paycheck-calculator.html" data-nav-key="paycheck" class="tb-mobile-link whitespace-nowrap px-3 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">Paycheck</a>
+    <span class="tb-mobile-divider" aria-hidden="true"></span>
+    <a href="about.html" data-nav-key="about" class="tb-mobile-link whitespace-nowrap px-3 py-2 rounded-full font-medium text-sm text-slate-600 hover:bg-slate-100">About</a>
+    <a href="privacy-policy.html" data-nav-key="privacy" class="tb-mobile-link whitespace-nowrap px-3 py-2 rounded-full font-medium text-sm text-slate-600 hover:bg-slate-100">Privacy</a>
+  </nav>
+</aside>
