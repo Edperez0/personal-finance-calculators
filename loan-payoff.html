@@ -736,32 +736,31 @@
               <tbody id="schedule-body" class="text-xs text-slate-600"></tbody>
             </table>
           </div>
-        </div>
 
-        <!-- Unified export bar (Share / CSV / PDF-as-premium) -->
-        <div class="export-bar" aria-label="Export options">
-          <p class="export-bar__title">Export</p>
-          <div class="export-bar__actions">
-            <button type="button" class="export-bar__btn" onclick="window.tbCopyShareLink && window.tbCopyShareLink()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-              Share Link
-            </button>
-            <button type="button" id="export-csv" class="export-bar__btn is-csv">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              CSV
-            </button>
-            <button type="button" id="export-pdf" class="export-bar__btn is-premium" disabled aria-disabled="true" title="PDF export is part of TransparentBudget Premium (coming soon).">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              PDF<span class="export-bar__premium-pill">Premium</span>
-            </button>
+          <!-- Flush footer: Share / CSV / PDF-as-premium, merged into the
+               schedule card so it reads as one component. -->
+          <div class="export-bar export-bar--flush" aria-label="Export options">
+            <p class="export-bar__title">Export</p>
+            <div class="export-bar__actions">
+              <button type="button" class="export-bar__btn" onclick="window.tbCopyShareLink && window.tbCopyShareLink()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                Share Link
+              </button>
+              <button type="button" id="export-csv" class="export-bar__btn is-csv">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                CSV
+              </button>
+              <button type="button" id="export-pdf" class="export-bar__btn is-premium" disabled aria-disabled="true" title="PDF export is part of TransparentBudget Premium (coming soon).">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                PDF<span class="export-bar__premium-pill">Premium</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="ad-slot max-w-5xl mx-auto px-0" data-slot="after-results"></div>
-
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-6 max-w-5xl mx-auto mb-8">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-6 max-w-5xl mx-auto mt-6 mb-8">
       <section class="seo-intro" aria-labelledby="about-loan-heading">
         <h2 id="about-loan-heading" class="text-xl font-bold text-slate-800 mb-3">About This Calculator</h2>
         <p>Model payoff dates using daily interest, optional extra payments, and avalanche or snowball ordering—whether you are tackling student debt, a car note, a personal loan, or high-APR cards. TransparentBudget runs entirely in your browser so balances and scenarios never leave your device.</p>
@@ -810,6 +809,8 @@
         </details>
       </section>
     </div>
+
+    <div class="ad-slot max-w-5xl mx-auto px-0" data-slot="after-results"></div>
 
     <div class="email-capture-slot max-w-5xl mx-auto px-0"></div>
   </div>

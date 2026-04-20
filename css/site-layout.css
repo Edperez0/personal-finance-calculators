@@ -240,6 +240,17 @@
   transition: background 150ms ease, color 150ms ease;
 }
 .export-bar__btn:hover { background: #dbeafe; }
+
+/* Flush variant: lives inside another card (e.g. the loan-payoff schedule
+   card) and reads as that card's footer instead of a standalone tile. */
+.export-bar--flush {
+  background: #f8fafc;
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  border-radius: 0;
+  box-shadow: none;
+  padding: var(--space-md) var(--space-lg);
+}
 .export-bar__btn.is-csv { background: var(--color-success-soft); color: var(--color-success); }
 .export-bar__btn.is-csv:hover { background: #d1fae5; }
 .export-bar__btn.is-premium {
