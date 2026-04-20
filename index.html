@@ -449,10 +449,9 @@
 
   <div class="p-4 md:p-8 flex-1">
     <div id="app" class="max-w-5xl mx-auto">
-      <section class="seo-intro mb-8 bg-white rounded-2xl border border-slate-200 p-5 md:p-6 shadow-sm" aria-labelledby="seo-budget-heading">
+      <div class="seo-intro mb-8" aria-labelledby="seo-budget-heading">
         <h1 id="seo-budget-heading">Monthly Budget Planner for Bi-Weekly and Semi-Monthly Paychecks</h1>
-        <p>TransparentBudget turns each paycheck into a realistic monthly spending plan so you can cover rent, savings, and day-to-day costs without guessing. It is built for people paid every two weeks or twice a month who still need a single monthly number for bills and goals. Everything runs in your browser and stays on your device.</p>
-      </section>
+      </div>
 
       <!-- Mobile Input Card (shows first on mobile, hidden on desktop) -->
       <div class="mobile-input-card md:hidden">
@@ -500,7 +499,6 @@
       <!-- Desktop Header (hidden on mobile) -->
       <header class="mb-8 desktop-only">
         <div class="space-y-1">
-          <h2 class="text-3xl font-bold tracking-tight text-slate-800">Budget Planner</h2>
           <div class="flex items-center gap-2 text-blue-600 font-semibold bg-blue-50 px-3 py-1 rounded-full w-fit">
             <span class="text-sm uppercase tracking-wider text-xs">Estimated Monthly Income:</span>
             <span id="monthly-income-display" class="text-lg">$0</span>
@@ -620,6 +618,11 @@
         </div>
       </div>
     </div>
+
+      <section class="seo-intro mb-8 max-w-5xl mx-auto px-0" aria-labelledby="about-budget-heading">
+        <h2 id="about-budget-heading" class="text-xl font-bold text-slate-800 mb-3">About This Calculator</h2>
+        <p>TransparentBudget turns each paycheck into a realistic monthly spending plan so you can cover rent, savings, and day-to-day costs without guessing. It is built for people paid every two weeks or twice a month who still need a single monthly number for bills and goals. Everything runs in your browser and stays on your device.</p>
+      </section>
 
       <section class="seo-faq max-w-5xl mx-auto px-0" aria-labelledby="faq-budget-heading">
         <h2 id="faq-budget-heading">Frequently Asked Questions</h2>
