@@ -381,6 +381,15 @@
         box-sizing: border-box;
       }
 
+      /* The first loan/bonus card cannot be removed (calculator always needs
+         at least one of each). Hiding the button here keeps the markup
+         identical for every item so the add-handlers don't need to special
+         case the initial render. */
+      .loan-item:first-child .loan-remove,
+      .bonus-item:first-child .bonus-remove {
+        display: none;
+      }
+
       /* Saved Scenarios - Fluid layout */
       .flex.gap-2:has(#scenario-name) {
         flex-wrap: wrap;
@@ -590,36 +599,42 @@
             </svg>
             Your Loan
           </h3>
-          <div id="loan-container" class="space-y-4">
-            <div class="loan-item border-b border-slate-100 pb-4 last:border-0 relative">
-              <div class="grid grid-cols-2 gap-3">
-                <div class="col-span-2">
-                  <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Current Balance ($)</label>
-                  <input type="number" class="loan-balance w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="30000" step="100">
+          <div class="loan-scroll max-h-[500px] overflow-y-auto pr-1 custom-scrollbar">
+            <div id="loan-container" class="space-y-3">
+              <div class="loan-item bg-slate-50 rounded-xl border border-slate-200 p-4 relative">
+                <div class="flex items-center gap-2 mb-3">
+                  <input type="text" class="loan-label flex-1 min-w-0 p-1.5 bg-white border border-slate-200 rounded-md text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="e.g., Car loan, Student loans, Visa" value="">
+                  <button type="button" class="loan-remove text-slate-300 hover:text-red-500 text-2xl leading-none shrink-0 px-1" aria-label="Remove this loan">&times;</button>
                 </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="col-span-2">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Current Balance ($)</label>
+                    <input type="number" class="loan-balance w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="30000" step="100">
+                  </div>
 
-                <div>
-                  <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">APR (%)</label>
-                  <input type="number" class="loan-apr w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="5.5" step="0.1">
-                </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">APR (%)</label>
+                    <input type="number" class="loan-apr w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="5.5" step="0.1">
+                  </div>
 
-                <div>
-                  <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Payment Amount</label>
-                  <input type="number" class="loan-pay w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="175" step="5">
-                </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Payment Amount</label>
+                    <input type="number" class="loan-pay w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="175" step="5">
+                  </div>
 
-                <div class="col-span-2">
-                  <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Payment Frequency</label>
-                  <select class="loan-pay-freq w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-                    <option value="biweekly" selected>Bi-Weekly</option>
-                    <option value="monthly">Monthly</option>
-                  </select>
+                  <div class="col-span-2">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Payment Frequency</label>
+                    <select class="loan-pay-freq w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                      <option value="biweekly" selected>Bi-Weekly</option>
+                      <option value="monthly">Monthly</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <button id="add-loan" class="mt-4 w-full py-2 border-2 border-dashed border-slate-300 rounded-xl text-slate-400 hover:border-blue-600 hover:text-blue-600 transition-all text-xs font-bold uppercase tracking-wider">+ Add Another Loan</button>
+          <button id="add-loan" class="mt-3 w-full py-2 border-2 border-dashed border-slate-300 rounded-xl text-slate-400 hover:border-blue-600 hover:text-blue-600 transition-all text-xs font-bold uppercase tracking-wider">+ Add Another Loan</button>
         </div>
 
         <!-- Bonus Injections -->
@@ -630,31 +645,33 @@
             </svg>
             Bonus Injections
           </h3>
-          <div id="bonus-container" class="space-y-4">
-            <div class="bonus-item border-b border-slate-100 pb-4 last:border-0 relative">
-              <div class="grid grid-cols-2 gap-3">
-                <div class="col-span-2">
-                  <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Bonus Label</label>
-                  <input type="text" class="bonus-label w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="Quarterly Bonus">
+          <div class="bonus-scroll max-h-[500px] overflow-y-auto pr-1 custom-scrollbar">
+            <div id="bonus-container" class="space-y-3">
+              <div class="bonus-item bg-slate-50 rounded-xl border border-slate-200 p-4 relative">
+                <div class="flex items-center gap-2 mb-3">
+                  <input type="text" class="bonus-label flex-1 min-w-0 p-1.5 bg-white border border-slate-200 rounded-md text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="e.g., Quarterly bonus, Tax refund" value="Quarterly Bonus">
+                  <button type="button" class="bonus-remove text-slate-300 hover:text-red-500 text-2xl leading-none shrink-0 px-1" aria-label="Remove this bonus">&times;</button>
                 </div>
-                <div>
-                  <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Amount ($)</label>
-                  <input type="number" class="bonus-amount w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="500">
-                </div>
-                <div>
-                  <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Frequency</label>
-                  <select class="bonus-freq w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-                    <option value="quarterly" selected>Quarterly</option>
-                    <option value="monthly">Monthly</option>
-                    <option value="biweekly">Bi-Weekly</option>
-                    <option value="weekly">Weekly</option>
-                  </select>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Amount ($)</label>
+                    <input type="number" class="bonus-amount w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="500">
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Frequency</label>
+                    <select class="bonus-freq w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                      <option value="quarterly" selected>Quarterly</option>
+                      <option value="monthly">Monthly</option>
+                      <option value="biweekly">Bi-Weekly</option>
+                      <option value="weekly">Weekly</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <button id="add-bonus" class="mt-4 w-full py-2 border-2 border-dashed border-slate-300 rounded-xl text-slate-400 hover:border-blue-600 hover:text-blue-600 transition-all text-xs font-bold uppercase tracking-wider">+ Add Another Bonus</button>
+          <button id="add-bonus" class="mt-3 w-full py-2 border-2 border-dashed border-slate-300 rounded-xl text-slate-400 hover:border-blue-600 hover:text-blue-600 transition-all text-xs font-bold uppercase tracking-wider">+ Add Another Bonus</button>
         </div>
       </div>
     </section>
@@ -676,7 +693,8 @@
     <div id="strategy-comparison" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 hidden mt-6">
       <h3 class="text-lg font-bold text-slate-800 mb-4">Debt Payoff Strategy Comparison</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+        <div class="p-4 bg-blue-50 rounded-lg border-2 border-blue-200 relative">
+          <span id="avalanche-recommended" class="hidden absolute top-3 right-3 bg-emerald-600 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full">Recommended</span>
           <div class="flex items-center gap-2 mb-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
               <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
@@ -691,7 +709,8 @@
           </div>
         </div>
 
-        <div class="p-4 bg-purple-50 rounded-lg border-2 border-purple-200">
+        <div class="p-4 bg-purple-50 rounded-lg border-2 border-purple-200 relative">
+          <span id="snowball-recommended" class="hidden absolute top-3 right-3 bg-emerald-600 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full">Recommended</span>
           <div class="flex items-center gap-2 mb-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11 4a1 1 0 10-2 0v4a1 1 0 102 0V7zm-3 1a1 1 0 10-2 0v3a1 1 0 102 0V8zM8 9a1 1 0 00-2 0v2a1 1 0 102 0V9z" clip-rule="evenodd" />
@@ -839,7 +858,7 @@
     const LEGACY_LOAN_DATA_KEY = 'studentLoanData';
 
     const DEFAULT_LOAN_INPUTS = {
-      loans: [{ balance: '30000', apr: '5.5', payment: '175', freq: 'biweekly' }],
+      loans: [{ label: '', balance: '30000', apr: '5.5', payment: '175', freq: 'biweekly' }],
       bonuses: [{ label: 'Quarterly Bonus', amount: '500', freq: 'quarterly' }],
     };
 
@@ -853,8 +872,10 @@
         const apr = parseFloat(el.querySelector('.loan-apr').value) || 0;
         const pay = parseFloat(el.querySelector('.loan-pay').value) || 0;
         const freq = el.querySelector('.loan-pay-freq')?.value || "biweekly";
+        const label = el.querySelector('.loan-label')?.value.trim() || '';
         return {
           id: index + 1,
+          label,
           balance,
           apr,
           paymentAmount: pay,
@@ -883,7 +904,8 @@
         resultBaseline.totalInterest,
         resultWithBonuses.chartData,
         resultWithBonuses.meta,
-        snowballResult
+        snowballResult,
+        loans
       );
     }
 
@@ -1130,7 +1152,7 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
 }
 
 
-    function renderView(schedule, totalI, baselineI, chartData, payoffMeta, snowballResult) {
+    function renderView(schedule, totalI, baselineI, chartData, payoffMeta, snowballResult, loans) {
       const lastRow = schedule[schedule.length - 1];
       const debtFreeText = payoffMeta?.warningMessage
         ? payoffMeta.warningMessage
@@ -1149,7 +1171,11 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
       const warningList = document.getElementById('loan-warning-list');
       if (payoffMeta?.interestOnlyLoans?.length) {
         warningList.innerHTML = payoffMeta.interestOnlyLoans
-          .map(n => `<li>Loan #${n}</li>`)
+          .map(n => {
+            const label = loans?.[n - 1]?.label;
+            const display = label && label.length ? label : `Loan #${n}`;
+            return `<li>${display}</li>`;
+          })
           .join('');
         warningBlock.classList.remove('hidden');
       } else {
@@ -1187,20 +1213,38 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
         document.getElementById('snowball-interest').innerText = `$${snowballResult.totalInterest.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
 
         const recommendation = document.getElementById('strategy-recommendation');
-        const interestDiff = Math.abs(totalI - snowballResult.totalInterest);
-        const avalancheBetter = totalI < snowballResult.totalInterest;
+        const avalanchePill = document.getElementById('avalanche-recommended');
+        const snowballPill  = document.getElementById('snowball-recommended');
+        avalanchePill.classList.add('hidden');
+        snowballPill.classList.add('hidden');
 
-        if (interestDiff < 100) {
-          recommendation.innerHTML = `<strong>🤝 Nearly Equal:</strong> Both strategies result in similar total interest (within $${interestDiff.toFixed(0)}). Choose based on personal preference.`;
-        } else if (avalancheBetter) {
-          recommendation.innerHTML = `<strong>💰 Avalanche Wins:</strong> Saves $${interestDiff.toLocaleString(undefined, { maximumFractionDigits: 0 })} in interest compared to Snowball. Mathematically optimal.`;
+        const interestDiff = Math.abs(totalI - snowballResult.totalInterest);
+        const avalancheMonths = schedule.length;
+        const snowballMonths  = snowballResult.monthlySchedule?.length ?? avalancheMonths;
+        const monthDiff = Math.abs(avalancheMonths - snowballMonths);
+        const avalancheBetter = totalI < snowballResult.totalInterest
+          || (totalI === snowballResult.totalInterest && avalancheMonths < snowballMonths);
+
+        // Meaningful = a reasonable person would care about the gap. Anything
+        // tighter than $100 / 1 month is rounding noise on multi-year payoffs.
+        const meaningful = interestDiff > 100 || monthDiff >= 1;
+
+        if (!meaningful) {
+          recommendation.innerHTML = `Your loans have similar balances and rates, so payment order doesn't significantly change the outcome. Pick the method that feels more motivating &mdash; <strong>Avalanche</strong> for math-first, <strong>Snowball</strong> for quick wins.`;
         } else {
-          recommendation.innerHTML = `<strong>⚡ Snowball Advantage:</strong> Snowball saves $${interestDiff.toLocaleString(undefined, { maximumFractionDigits: 0 })} in this scenario (unusual - check your loan details).`;
+          const winner = avalancheBetter ? 'Avalanche' : 'Snowball';
+          const loser  = avalancheBetter ? 'Snowball' : 'Avalanche';
+          (avalancheBetter ? avalanchePill : snowballPill).classList.remove('hidden');
+          const dollars = `$${interestDiff.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+          const months  = `${monthDiff} month${monthDiff === 1 ? '' : 's'}`;
+          recommendation.innerHTML = `<strong>${winner} saves you ${dollars} and ${months}</strong> compared to ${loser}.`;
         }
 
         comparisonBlock.classList.remove('hidden');
       } else {
         comparisonBlock.classList.add('hidden');
+        document.getElementById('avalanche-recommended')?.classList.add('hidden');
+        document.getElementById('snowball-recommended')?.classList.add('hidden');
       }
 
       const ctx = document.getElementById('payoffChart').getContext('2d');
@@ -1233,25 +1277,28 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
     document.getElementById('add-loan').addEventListener('click', () => {
       const container = document.getElementById('loan-container');
       const div = document.createElement('div');
-      div.className = 'loan-item border-b border-slate-100 pb-4 last:border-0 relative pt-4';
+      div.className = 'loan-item bg-slate-50 rounded-xl border border-slate-200 p-4 relative';
       div.innerHTML = `
-        <button onclick="this.parentElement.remove(); calculate(); saveToLocalStorage();" class="absolute right-0 top-0 text-slate-300 hover:text-red-500 text-2xl leading-none">×</button>
+        <div class="flex items-center gap-2 mb-3">
+          <input type="text" class="loan-label flex-1 min-w-0 p-1.5 bg-white border border-slate-200 rounded-md text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="e.g., Car loan, Student loans, Visa" value="">
+          <button type="button" class="loan-remove text-slate-300 hover:text-red-500 text-2xl leading-none shrink-0 px-1" aria-label="Remove this loan">&times;</button>
+        </div>
         <div class="grid grid-cols-2 gap-3">
           <div class="col-span-2">
-            <label class="block text-[10px] font-bold text-slate-400 uppercase">Balance</label>
-            <input type="number" class="loan-balance w-full p-2 bg-slate-50 border rounded-lg" value="10000">
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Current Balance ($)</label>
+            <input type="number" class="loan-balance w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="10000" step="100">
           </div>
           <div>
-            <label class="block text-[10px] font-bold text-slate-400 uppercase">APR (%)</label>
-            <input type="number" class="loan-apr w-full p-2 bg-slate-50 border rounded-lg" value="6.0" step="0.1">
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">APR (%)</label>
+            <input type="number" class="loan-apr w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="6.0" step="0.1">
           </div>
           <div>
-            <label class="block text-[10px] font-bold text-slate-400 uppercase">Payment Amount</label>
-            <input type="number" class="loan-pay w-full p-2 bg-slate-50 border rounded-lg" value="175" step="5">
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Payment Amount</label>
+            <input type="number" class="loan-pay w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="175" step="5">
           </div>
           <div class="col-span-2">
-            <label class="block text-[10px] font-bold text-slate-400 uppercase">Frequency</label>
-            <select class="loan-pay-freq w-full p-2 bg-slate-50 border rounded-lg">
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Payment Frequency</label>
+            <select class="loan-pay-freq w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
               <option value="biweekly" selected>Bi-Weekly</option>
               <option value="monthly">Monthly</option>
             </select>
@@ -1266,21 +1313,20 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
     document.getElementById('add-bonus').addEventListener('click', () => {
       const container = document.getElementById('bonus-container');
       const div = document.createElement('div');
-      div.className = 'bonus-item border-b border-slate-100 pb-4 last:border-0 relative pt-4';
+      div.className = 'bonus-item bg-slate-50 rounded-xl border border-slate-200 p-4 relative';
       div.innerHTML = `
-        <button onclick="this.parentElement.remove(); calculate(); saveToLocalStorage();" class="absolute right-0 top-0 text-slate-300 hover:text-red-500 text-2xl leading-none">×</button>
+        <div class="flex items-center gap-2 mb-3">
+          <input type="text" class="bonus-label flex-1 min-w-0 p-1.5 bg-white border border-slate-200 rounded-md text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="e.g., Quarterly bonus, Tax refund" value="Extra">
+          <button type="button" class="bonus-remove text-slate-300 hover:text-red-500 text-2xl leading-none shrink-0 px-1" aria-label="Remove this bonus">&times;</button>
+        </div>
         <div class="grid grid-cols-2 gap-3">
-          <div class="col-span-2">
-            <label class="block text-[10px] font-bold text-slate-400 uppercase">Label</label>
-            <input type="text" class="bonus-label w-full p-2 bg-slate-50 border rounded-lg" value="Extra">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Amount ($)</label>
+            <input type="number" class="bonus-amount w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="100">
           </div>
           <div>
-            <label class="block text-[10px] font-bold text-slate-400 uppercase">Amount</label>
-            <input type="number" class="bonus-amount w-full p-2 bg-slate-50 border rounded-lg" value="100">
-          </div>
-          <div>
-            <label class="block text-[10px] font-bold text-slate-400 uppercase">Freq</label>
-            <select class="bonus-freq w-full p-2 bg-slate-50 border rounded-lg">
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Frequency</label>
+            <select class="bonus-freq w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
               <option value="quarterly">Quarterly</option>
               <option value="monthly" selected>Monthly</option>
               <option value="biweekly">Bi-Weekly</option>
@@ -1293,6 +1339,22 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
       calculate();
       saveToLocalStorage();
     });
+
+    // Delegated remove handlers for both lists. Hidden CSS prevents the first
+    // item's button from firing, so no special-casing needed.
+    function attachRemoveHandler(containerId, itemSelector, btnSelector) {
+      document.getElementById(containerId).addEventListener('click', (e) => {
+        const btn = e.target.closest(btnSelector);
+        if (!btn) return;
+        const item = btn.closest(itemSelector);
+        if (!item) return;
+        item.remove();
+        calculate();
+        saveToLocalStorage();
+      });
+    }
+    attachRemoveHandler('loan-container', '.loan-item', '.loan-remove');
+    attachRemoveHandler('bonus-container', '.bonus-item', '.bonus-remove');
 
     // ============ SCENARIO MANAGEMENT ============
     function getAllScenarios() {
@@ -1368,6 +1430,7 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
 
     function getCurrentData() {
       const loans = Array.from(document.querySelectorAll('.loan-item')).map(el => ({
+        label: el.querySelector('.loan-label')?.value || '',
         balance: el.querySelector('.loan-balance').value,
         apr: el.querySelector('.loan-apr').value,
         payment: el.querySelector('.loan-pay').value,
@@ -1389,28 +1452,33 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
       loanContainer.innerHTML = '';
       bonusContainer.innerHTML = '';
 
+      const escapeAttr = (str) => String(str ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
       // Restore loans
       data.loans.forEach((loan, index) => {
         const div = document.createElement('div');
-        div.className = 'loan-item border-b border-slate-100 pb-4 last:border-0 relative' + (index > 0 ? ' pt-4' : '');
+        div.className = 'loan-item bg-slate-50 rounded-xl border border-slate-200 p-4 relative';
         div.innerHTML = `
-          ${index > 0 ? '<button onclick="this.parentElement.remove(); calculate(); saveToLocalStorage();" class="absolute right-0 top-0 text-slate-300 hover:text-red-500 text-2xl leading-none">×</button>' : ''}
+          <div class="flex items-center gap-2 mb-3">
+            <input type="text" class="loan-label flex-1 min-w-0 p-1.5 bg-white border border-slate-200 rounded-md text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="e.g., Car loan, Student loans, Visa" value="${escapeAttr(loan.label || '')}">
+            <button type="button" class="loan-remove text-slate-300 hover:text-red-500 text-2xl leading-none shrink-0 px-1" aria-label="Remove this loan">&times;</button>
+          </div>
           <div class="grid grid-cols-2 gap-3">
             <div class="col-span-2">
               <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Current Balance ($)</label>
-              <input type="number" class="loan-balance w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="${loan.balance}" step="100">
+              <input type="number" class="loan-balance w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="${loan.balance}" step="100">
             </div>
             <div>
               <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">APR (%)</label>
-              <input type="number" class="loan-apr w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="${loan.apr}" step="0.1">
+              <input type="number" class="loan-apr w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="${loan.apr}" step="0.1">
             </div>
             <div>
               <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Payment Amount</label>
-              <input type="number" class="loan-pay w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="${loan.payment}" step="5">
+              <input type="number" class="loan-pay w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="${loan.payment}" step="5">
             </div>
             <div class="col-span-2">
               <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Payment Frequency</label>
-              <select class="loan-pay-freq w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+              <select class="loan-pay-freq w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                 <option value="biweekly" ${loan.freq === 'biweekly' ? 'selected' : ''}>Bi-Weekly</option>
                 <option value="monthly" ${loan.freq === 'monthly' ? 'selected' : ''}>Monthly</option>
               </select>
@@ -1423,21 +1491,20 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
       // Restore bonuses
       data.bonuses.forEach((bonus, index) => {
         const div = document.createElement('div');
-        div.className = 'bonus-item border-b border-slate-100 pb-4 last:border-0 relative' + (index > 0 ? ' pt-4' : '');
+        div.className = 'bonus-item bg-slate-50 rounded-xl border border-slate-200 p-4 relative';
         div.innerHTML = `
-          ${index > 0 ? '<button onclick="this.parentElement.remove(); calculate(); saveToLocalStorage();" class="absolute right-0 top-0 text-slate-300 hover:text-red-500 text-2xl leading-none">×</button>' : ''}
+          <div class="flex items-center gap-2 mb-3">
+            <input type="text" class="bonus-label flex-1 min-w-0 p-1.5 bg-white border border-slate-200 rounded-md text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="e.g., Quarterly bonus, Tax refund" value="${escapeAttr(bonus.label || '')}">
+            <button type="button" class="bonus-remove text-slate-300 hover:text-red-500 text-2xl leading-none shrink-0 px-1" aria-label="Remove this bonus">&times;</button>
+          </div>
           <div class="grid grid-cols-2 gap-3">
-            <div class="col-span-2">
-              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Bonus Label</label>
-              <input type="text" class="bonus-label w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="${bonus.label}">
-            </div>
             <div>
               <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Amount ($)</label>
-              <input type="number" class="bonus-amount w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="${bonus.amount}">
+              <input type="number" class="bonus-amount w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" value="${bonus.amount}">
             </div>
             <div>
               <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Frequency</label>
-              <select class="bonus-freq w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+              <select class="bonus-freq w-full p-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                 <option value="quarterly" ${bonus.freq === 'quarterly' ? 'selected' : ''}>Quarterly</option>
                 <option value="monthly" ${bonus.freq === 'monthly' ? 'selected' : ''}>Monthly</option>
                 <option value="biweekly" ${bonus.freq === 'biweekly' ? 'selected' : ''}>Bi-Weekly</option>
@@ -1454,6 +1521,7 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
     function exportToCSV() {
       const loans = Array.from(document.querySelectorAll('.loan-item')).map((el, index) => {
         return {
+          label: el.querySelector('.loan-label')?.value.trim() || '',
           balance: parseFloat(el.querySelector('.loan-balance').value) || 0,
           apr: parseFloat(el.querySelector('.loan-apr').value) || 0,
           paymentAmount: parseFloat(el.querySelector('.loan-pay').value) || 0,
@@ -1469,8 +1537,18 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
       const result = runDailySimulation(loans, bonuses, MAX_DAYS);
       const schedule = result.monthlySchedule;
 
-      // Build CSV content
-      let csv = 'Month,Balance,Interest Paid,Principal Paid,Bonus Payments\n';
+      const csvEscape = (val) => {
+        const s = String(val ?? '');
+        return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+      };
+
+      // Loan summary header lists each loan + (optional) label so the export
+      // is self-documenting before the schedule begins.
+      let csv = 'Loan,Label,Balance,APR,Payment,Frequency\n';
+      loans.forEach((loan, i) => {
+        csv += `${i + 1},${csvEscape(loan.label || `Loan #${i + 1}`)},${loan.balance.toFixed(2)},${loan.apr},${loan.paymentAmount.toFixed(2)},${loan.freq}\n`;
+      });
+      csv += '\nMonth,Balance,Interest Paid,Principal Paid,Bonus Payments\n';
       schedule.forEach(row => {
         csv += `"${row.month}",${Math.max(0, row.balance).toFixed(2)},${(row.interest || 0).toFixed(2)},${(row.paid || 0).toFixed(2)},${(row.bonus || 0).toFixed(2)}\n`;
       });
@@ -1490,6 +1568,7 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
       // Get current data
       const loans = Array.from(document.querySelectorAll('.loan-item')).map((el, index) => {
         return {
+          label: el.querySelector('.loan-label')?.value.trim() || '',
           balance: parseFloat(el.querySelector('.loan-balance').value) || 0,
           apr: parseFloat(el.querySelector('.loan-apr').value) || 0,
           paymentAmount: parseFloat(el.querySelector('.loan-pay').value) || 0,
@@ -1538,7 +1617,8 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
       doc.setFontSize(9);
 
       loans.forEach((loan, i) => {
-        doc.text(`Loan ${i + 1}: $${loan.balance.toLocaleString()} @ ${loan.apr}% APR`, 25, yPos);
+        const heading = loan.label && loan.label.length ? loan.label : `Loan ${i + 1}`;
+        doc.text(`${heading}: $${loan.balance.toLocaleString()} @ ${loan.apr}% APR`, 25, yPos);
         yPos += 5;
         doc.text(`Payment: $${loan.paymentAmount} ${loan.freq}`, 25, yPos);
         yPos += 7;
@@ -1623,6 +1703,7 @@ function runDailySimulation(loanData, bonuses, maxDays, strategy = 'avalanche') 
     // ============ LOCALSTORAGE PERSISTENCE ============
     function saveToLocalStorage() {
       const loans = Array.from(document.querySelectorAll('.loan-item')).map(el => ({
+        label: el.querySelector('.loan-label')?.value || '',
         balance: el.querySelector('.loan-balance').value,
         apr: el.querySelector('.loan-apr').value,
         payment: el.querySelector('.loan-pay').value,
