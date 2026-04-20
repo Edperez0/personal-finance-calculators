@@ -441,6 +441,9 @@
         <a href="loan-payoff.html" class="px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">
           Loan Payoff
         </a>
+        <a href="paycheck-calculator.html" class="px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">
+          Paycheck
+        </a>
         <span class="hidden sm:inline w-px h-5 bg-slate-200 shrink-0" aria-hidden="true"></span>
         <div class="flex items-center gap-1 sm:gap-2 text-sm">
           <a href="about.html" class="px-2 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 hover:text-blue-600">About</a>
@@ -677,7 +680,7 @@
 
       <section class="max-w-5xl mx-auto px-0 mb-8" aria-labelledby="related-budget-heading">
         <h2 id="related-budget-heading" class="text-xl font-bold text-slate-800 mb-4">Related Calculators</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <a href="commission-breakdown.html" class="block bg-white rounded-xl border border-slate-200 p-4 hover:border-blue-300 hover:shadow-sm transition-all">
             <h3 class="font-bold text-slate-800">Bonus Breakdown</h3>
             <p class="text-sm text-slate-600 mt-1">Plan how to split a bonus or commission check into savings, debt, and spending buckets.</p>
@@ -685,6 +688,10 @@
           <a href="loan-payoff.html" class="block bg-white rounded-xl border border-slate-200 p-4 hover:border-blue-300 hover:shadow-sm transition-all">
             <h3 class="font-bold text-slate-800">Loan Payoff</h3>
             <p class="text-sm text-slate-600 mt-1">See payoff dates, total interest, and avalanche vs snowball with extra payments and bonuses.</p>
+          </a>
+          <a href="paycheck-calculator.html" class="block bg-white rounded-xl border border-slate-200 p-4 hover:border-blue-300 hover:shadow-sm transition-all">
+            <h3 class="font-bold text-slate-800">Paycheck (Gross to Net)</h3>
+            <p class="text-sm text-slate-600 mt-1">Estimate take-home pay and tax breakdown by state before you plug numbers into the budget planner.</p>
           </a>
         </div>
       </section>
@@ -715,24 +722,28 @@
 
   <!-- Mobile Bottom Navigation -->
   <nav class="mobile-bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-lg z-50">
-    <div class="flex items-center justify-around py-3">
-      <a href="index.html" class="flex flex-col items-center gap-1 px-4 py-2 text-blue-600">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="flex items-center justify-around py-2 px-1">
+      <a href="index.html" class="flex flex-col items-center gap-0.5 px-2 py-1.5 text-blue-600 min-w-0">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
         </svg>
-        <span class="text-xs font-semibold">Budget</span>
+        <span class="text-[10px] font-semibold leading-tight text-center">Budget</span>
       </a>
-      <a href="commission-breakdown.html" class="flex flex-col items-center gap-1 px-4 py-2 text-slate-500">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <a href="commission-breakdown.html" class="flex flex-col items-center gap-0.5 px-2 py-1.5 text-slate-500 min-w-0">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <span class="text-xs font-semibold">Bonus</span>
+        <span class="text-[10px] font-semibold leading-tight text-center">Bonus</span>
       </a>
-      <a href="loan-payoff.html" class="flex flex-col items-center gap-1 px-4 py-2 text-slate-500">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <a href="loan-payoff.html" class="flex flex-col items-center gap-0.5 px-2 py-1.5 text-slate-500 min-w-0">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
-        <span class="text-xs font-semibold">Loan Payoff</span>
+        <span class="text-[10px] font-semibold leading-tight text-center">Loan</span>
+      </a>
+      <a href="paycheck-calculator.html" class="flex flex-col items-center gap-0.5 px-2 py-1.5 text-slate-500 min-w-0">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+        <span class="text-[10px] font-semibold leading-tight text-center">Paycheck</span>
       </a>
     </div>
   </nav>
@@ -740,15 +751,26 @@
   <!-- Global Footer -->
   <footer class="bg-white border-t border-slate-200 py-6 mt-8">
     <div class="max-w-5xl mx-auto px-4 md:px-8">
-      <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-sm text-slate-500 pb-28 md:pb-0">
-        <div class="flex items-center gap-2">
-          <span class="text-lg" aria-hidden="true">🔒</span>
-          <span>100% Private. Data stays on your device.</span>
-        </div>
-        <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs w-full md:w-auto border-t border-slate-100 pt-4 md:border-t-0 md:pt-0 md:pl-4 md:border-l md:border-slate-200">
-          <a href="about.html" class="hover:text-blue-600">About</a>
+      <div class="flex flex-col gap-4 text-sm text-slate-500 pb-28 md:pb-0">
+        <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs font-medium">
+          <a href="index.html" class="text-blue-600 font-semibold" aria-current="page">Budget</a>
           <span class="text-slate-300" aria-hidden="true">·</span>
-          <a href="privacy-policy.html" class="hover:text-blue-600">Privacy Policy</a>
+          <a href="commission-breakdown.html" class="hover:text-blue-600">Bonus</a>
+          <span class="text-slate-300" aria-hidden="true">·</span>
+          <a href="loan-payoff.html" class="hover:text-blue-600">Loan</a>
+          <span class="text-slate-300" aria-hidden="true">·</span>
+          <a href="paycheck-calculator.html" class="hover:text-blue-600">Paycheck</a>
+        </div>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
+          <div class="flex items-center gap-2">
+            <span class="text-lg" aria-hidden="true">🔒</span>
+            <span>100% Private. Data stays on your device.</span>
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs w-full md:w-auto border-t border-slate-100 pt-4 md:border-t-0 md:pt-0 md:pl-4 md:border-l md:border-slate-200">
+            <a href="about.html" class="hover:text-blue-600">About</a>
+            <span class="text-slate-300" aria-hidden="true">·</span>
+            <a href="privacy-policy.html" class="hover:text-blue-600">Privacy Policy</a>
+          </div>
         </div>
       </div>
     </div>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-39DSVQLG9K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-39DSVQLG9K');
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6154963071737091"
+     crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bi-Weekly Paycheck Calculator — Gross to Net & Take Home by State | TransparentBudget</title>
+  <meta name="description" content="Free bi-weekly paycheck calculator and gross to net paycheck calculator: estimate take home pay by state, filing status, and tax year—federal, state, and FICA in your browser | TransparentBudget." />
+  <meta name="keywords" content="bi-weekly paycheck calculator, gross to net paycheck calculator, take home pay calculator by state, paycheck tax estimator, FICA calculator" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://transparentbudget.com/paycheck-calculator.html" />
+  <meta property="og:title" content="Bi-Weekly Paycheck Calculator: Gross to Net | TransparentBudget" />
+  <meta property="og:description" content="Estimate take-home pay by state with federal, state, and FICA breakdown—private gross to net paycheck calculator." />
+  <meta property="og:url" content="https://transparentbudget.com/paycheck-calculator.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="TransparentBudget" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "TransparentBudget Bi-Weekly Paycheck Calculator (Gross to Net)",
+        "url": "https://transparentbudget.com/paycheck-calculator.html",
+        "description": "Free online bi-weekly paycheck calculator and take home pay calculator by state. Estimates federal income tax, state tax, and FICA from gross or net pay—runs entirely in your browser.",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is the difference between gross pay and net pay?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Gross pay is your wages before taxes and most deductions. Net pay (take-home) is what remains after federal income tax, state income tax (if any), FICA (Social Security and Medicare), and any other deductions. This calculator estimates those withholdings; your actual pay stub may differ."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does FICA work on a paycheck?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "FICA combines Social Security (6.2% on wages up to the annual wage base) and Medicare (1.45% on all covered wages). An additional 0.9% Medicare tax can apply above IRS thresholds. Employers match Social Security and Medicare for a separate payroll tax not shown in your take-home."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why does my take-home pay differ from W-2 Box 1?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Box 1 reports federal taxable wages after certain pre-tax items, not your cash take-home. Take-home also subtracts taxes withheld, post-tax deductions, and optional contributions. Timing of bonuses, 401(k) types, HSAs, and fringe benefits can all cause Box 1 and net pay to diverge."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does state tax affect my paycheck?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "States with an income tax may require withholding based on their own brackets or flat rates, which stacks on top of federal withholding. Nine states have no broad tax on wage income modeled here; others vary widely. Local income taxes (e.g., city or school district) are not included in this estimate."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "When should I adjust my W-4 withholding?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Consider updating Form W-4 after major life changes—marriage, divorce, new dependents, second job, spouse’s income changes—or if you consistently owe a large balance or receive a large refund. This tool is not a substitute for IRS Form W-4 worksheets or advice from payroll or a tax professional."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    .seo-intro h1 {
+      font-size: 1.875rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: #1e293b;
+      line-height: 1.2;
+      margin: 0 0 0.75rem;
+    }
+    .seo-intro p { color: #64748b; font-size: 0.9375rem; line-height: 1.65; margin: 0; }
+    .seo-faq { margin-top: 2.5rem; margin-bottom: 0.5rem; }
+    .seo-faq > h2 { font-size: 1.25rem; font-weight: 700; color: #1e293b; margin: 0 0 1rem; }
+    .seo-faq details {
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      margin-bottom: 0.5rem;
+      background: #fff;
+      overflow: hidden;
+    }
+    .seo-faq summary {
+      cursor: pointer;
+      padding: 0.875rem 1rem;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      color: #334155;
+      list-style: none;
+    }
+    .seo-faq summary::-webkit-details-marker { display: none; }
+    .seo-faq details[open] summary { color: #2563eb; border-bottom: 1px solid #e2e8f0; }
+    .seo-faq .faq-answer {
+      padding: 0 1rem 1rem;
+      margin: 0;
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: #475569;
+    }
+    @media (max-width: 768px) {
+      body { padding-bottom: clamp(70px, 18vw, 90px); }
+      .mobile-bottom-nav { display: flex !important; position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
+      nav.sticky { display: none; }
+    }
+    .mobile-bottom-nav { display: none; }
+    .pay-toggle-label { cursor: pointer; flex: 1; min-width: 140px; }
+    .pay-toggle-label input { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    .pay-toggle-label span {
+      display: block; text-align: center; font-size: 0.875rem; font-weight: 600; padding: 0.5rem 0.75rem; border-radius: 0.375rem; color: #475569;
+    }
+    .pay-toggle-label input:checked + span {
+      background: #fff; color: #0f172a; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans flex flex-col min-h-screen">
+  <nav class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 md:px-8 py-4">
+      <div class="flex flex-wrap items-center gap-2">
+        <a href="index.html" class="px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">Budget Planner</a>
+        <a href="commission-breakdown.html" class="px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">Bonus</a>
+        <a href="loan-payoff.html" class="px-4 py-2 rounded-full font-semibold text-sm transition-all text-slate-700 hover:bg-slate-100">Loan Payoff</a>
+        <a href="paycheck-calculator.html" class="px-4 py-2 rounded-full font-semibold text-sm transition-all bg-blue-600 text-white" aria-current="page">Paycheck</a>
+        <span class="hidden sm:inline w-px h-5 bg-slate-200 shrink-0" aria-hidden="true"></span>
+        <div class="flex items-center gap-1 sm:gap-2 text-sm">
+          <a href="about.html" class="px-2 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 hover:text-blue-600">About</a>
+          <a href="privacy-policy.html" class="px-2 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 hover:text-blue-600">Privacy</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="p-4 md:p-8 flex-1">
+    <div class="max-w-5xl mx-auto">
+      <div class="seo-intro mb-8" aria-labelledby="paycheck-heading">
+        <h1 id="paycheck-heading">Bi-Weekly Paycheck Calculator: Gross to Net</h1>
+        <p class="text-sm text-slate-500 mt-2">Last updated: April 2026</p>
+        <p class="mt-3 max-w-3xl">Estimate take-home pay from gross (or back-solve gross from take-home) using federal brackets, FICA, and a simplified state model—useful as a <strong>take home pay calculator by state</strong> before you tune withholding.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-5">
+          <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <i data-lucide="sliders-horizontal" class="w-5 h-5 text-blue-600"></i>
+            Your pay
+          </h2>
+
+          <div>
+            <label class="text-xs font-semibold uppercase text-slate-400 block mb-2">Pay amount is</label>
+            <div class="flex flex-wrap gap-2 bg-slate-100 rounded-lg p-1" role="group" aria-label="Gross or take-home pay">
+              <label class="pay-toggle-label">
+                <input type="radio" name="pay-type" value="gross" checked />
+                <span>Gross pay</span>
+              </label>
+              <label class="pay-toggle-label">
+                <input type="radio" name="pay-type" value="net" />
+                <span>Take-home pay</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label for="pay-amount" class="text-xs font-semibold uppercase text-slate-400 block mb-1">Amount per paycheck</label>
+            <div class="flex items-center gap-2">
+              <span class="text-lg font-bold">$</span>
+              <input id="pay-amount" type="number" value="2500" min="0" step="0.01"
+                class="text-lg font-bold border border-slate-200 rounded-lg px-3 py-2 w-full max-w-xs focus:ring-2 focus:ring-blue-500 outline-none" />
+            </div>
+          </div>
+
+          <div>
+            <label for="pay-frequency" class="text-xs font-semibold uppercase text-slate-400 block mb-1">Pay frequency</label>
+            <select id="pay-frequency" class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-slate-800 bg-white font-medium">
+              <option value="biweekly" selected>Bi-Weekly</option>
+              <option value="semimonthly">Twice a Month</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="hours-week" class="text-xs font-semibold uppercase text-slate-400 block mb-1">Hours per week</label>
+            <input id="hours-week" type="number" value="40" min="1" max="168" step="1"
+              class="w-full border border-slate-200 rounded-lg px-3 py-2.5 font-semibold focus:ring-2 focus:ring-blue-500 outline-none" />
+            <p class="text-xs text-slate-400 mt-1">Hourly figures divide annual pay by (hours × 52) for a full-year rate.</p>
+          </div>
+
+          <div>
+            <label for="state-select" class="text-xs font-semibold uppercase text-slate-400 block mb-1">State (withholding)</label>
+            <select id="state-select" class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-slate-800 bg-white font-medium"></select>
+            <p id="state-guess-hint" class="text-xs text-blue-600 mt-1 hidden" role="status"></p>
+          </div>
+
+          <div>
+            <label for="filing-status" class="text-xs font-semibold uppercase text-slate-400 block mb-1">Filing status</label>
+            <select id="filing-status" class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-slate-800 bg-white font-medium">
+              <option value="single">Single</option>
+              <option value="mfj">Married Filing Jointly</option>
+              <option value="mfs">Married Filing Separately</option>
+              <option value="hoh">Head of Household</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="pretax-deductions" class="text-xs font-semibold uppercase text-slate-400 block mb-1">Pre-tax deductions per paycheck (optional)</label>
+            <p class="text-xs text-slate-500 mb-1">401(k), HSA, health insurance—one combined dollar amount.</p>
+            <div class="flex items-center gap-2">
+              <span class="font-bold">$</span>
+              <input id="pretax-deductions" type="number" value="0" min="0" step="0.01"
+                class="flex-1 border border-slate-200 rounded-lg px-3 py-2.5 font-semibold focus:ring-2 focus:ring-blue-500 outline-none" />
+            </div>
+          </div>
+
+          <div>
+            <label for="tax-year" class="text-xs font-semibold uppercase text-slate-400 block mb-1">Tax year</label>
+            <select id="tax-year" class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-slate-800 bg-white font-medium">
+              <option value="2026" selected>2026</option>
+              <option value="2025">2025</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="space-y-6">
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+              <i data-lucide="calculator" class="w-5 h-5 text-blue-600"></i>
+              Results
+            </h2>
+            <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+              <div class="border border-slate-100 rounded-xl p-4 bg-slate-50/80">
+                <dt class="text-slate-500 font-medium">Gross hourly</dt>
+                <dd id="res-gross-hourly" class="text-xl font-bold text-slate-800 mt-1">$0.00</dd>
+              </div>
+              <div class="border border-slate-100 rounded-xl p-4 bg-slate-50/80">
+                <dt class="text-slate-500 font-medium">Net hourly</dt>
+                <dd id="res-net-hourly" class="text-xl font-bold text-green-700 mt-1">$0.00</dd>
+              </div>
+              <div class="border border-slate-100 rounded-xl p-4 bg-slate-50/80 sm:col-span-2">
+                <dt class="text-slate-500 font-medium">Estimated gross (annual)</dt>
+                <dd id="res-gross-annual" class="text-lg font-bold text-slate-800 mt-1">$0.00</dd>
+              </div>
+              <div class="border border-slate-100 rounded-xl p-4 bg-slate-50/80 sm:col-span-2">
+                <dt class="text-slate-500 font-medium">Effective total tax rate</dt>
+                <dd id="res-effective-rate" class="text-2xl font-black text-slate-800 mt-1">0%</dd>
+                <div class="mt-3 h-3 w-full rounded-full bg-slate-200 overflow-hidden flex" aria-hidden="true">
+                  <div id="bar-federal-pct" class="h-full bg-blue-600 transition-all duration-300" style="width:0%"></div>
+                  <div id="bar-state-pct" class="h-full bg-indigo-500 transition-all duration-300" style="width:0%"></div>
+                  <div id="bar-fica-pct" class="h-full bg-slate-500 transition-all duration-300" style="width:0%"></div>
+                </div>
+                <p class="text-xs text-slate-400 mt-1">Blue: federal · Indigo: state · Gray: FICA (share of gross)</p>
+              </div>
+              <div class="border border-slate-100 rounded-xl p-4 bg-slate-50/80">
+                <dt class="text-slate-500 font-medium">Net per paycheck</dt>
+                <dd id="res-net-per-pay" class="text-xl font-bold text-slate-800 mt-1">$0.00</dd>
+              </div>
+              <div class="border border-slate-100 rounded-xl p-4 bg-slate-50/80">
+                <dt class="text-slate-500 font-medium">Net monthly</dt>
+                <dd id="res-net-monthly" class="text-xl font-bold text-slate-800 mt-1">$0.00</dd>
+                <p class="text-xs text-slate-400 mt-1">Annual ÷ 12 (budgeting convention)</p>
+              </div>
+              <div class="border border-slate-100 rounded-xl p-4 bg-slate-50/80 sm:col-span-2">
+                <dt class="text-slate-500 font-medium">Net annual</dt>
+                <dd id="res-net-annual" class="text-2xl font-black text-green-700 mt-1">$0.00</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+            <p class="text-sm text-amber-950 font-medium leading-relaxed">
+              Estimates only. Does not account for local taxes, tax credits, or withholding elections. Consult a tax pro for decisions.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-8">
+        <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+          <i data-lucide="pie-chart" class="w-5 h-5 text-blue-600"></i>
+          What&apos;s eating your paycheck
+        </h2>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between text-sm font-semibold text-slate-700 mb-1">
+              <span>Federal</span>
+              <span><span id="eat-fed-amt">$0.00</span> · <span id="eat-fed-pct" class="text-slate-500 font-normal">0%</span> of gross</span>
+            </div>
+            <div class="h-3 rounded-full bg-slate-100 overflow-hidden">
+              <div id="eat-bar-federal" class="h-full bg-blue-600 rounded-l-full transition-all duration-300" style="width:0%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm font-semibold text-slate-700 mb-1">
+              <span>State</span>
+              <span><span id="eat-state-amt">$0.00</span> · <span id="eat-state-pct" class="text-slate-500 font-normal">0%</span> of gross</span>
+            </div>
+            <div class="h-3 rounded-full bg-slate-100 overflow-hidden">
+              <div id="eat-bar-state" class="h-full bg-indigo-500 rounded-l-full transition-all duration-300" style="width:0%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm font-semibold text-slate-700 mb-1">
+              <span>FICA</span>
+              <span><span id="eat-fica-amt">$0.00</span> · <span id="eat-fica-pct" class="text-slate-500 font-normal">0%</span> of gross</span>
+            </div>
+            <div class="h-3 rounded-full bg-slate-100 overflow-hidden">
+              <div id="eat-bar-fica" class="h-full bg-slate-600 rounded-l-full transition-all duration-300" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="seo-intro mb-8 px-0" aria-labelledby="about-paycheck-heading">
+        <h2 id="about-paycheck-heading" class="text-xl font-bold text-slate-800 mb-3">About This Calculator</h2>
+        <p class="max-w-3xl">This <strong>gross to net paycheck calculator</strong> uses public federal bracket data and simplified state rules. It is built for quick what-if scenarios—especially <strong>bi-weekly paycheck calculator</strong> style planning—not for filing taxes or disputing payroll. Everything runs locally in your browser.</p>
+      </section>
+
+      <section class="max-w-5xl mx-auto px-0 mb-8" aria-labelledby="related-paycheck-heading">
+        <h2 id="related-paycheck-heading" class="text-xl font-bold text-slate-800 mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <a href="index.html" class="block bg-white rounded-xl border border-slate-200 p-4 hover:border-blue-300 hover:shadow-sm transition-all">
+            <h3 class="font-bold text-slate-800">Budget Planner</h3>
+            <p class="text-sm text-slate-600 mt-1">Plan monthly spending from bi-weekly or twice-a-month pay.</p>
+          </a>
+          <a href="commission-breakdown.html" class="block bg-white rounded-xl border border-slate-200 p-4 hover:border-blue-300 hover:shadow-sm transition-all">
+            <h3 class="font-bold text-slate-800">Bonus Breakdown</h3>
+            <p class="text-sm text-slate-600 mt-1">Split a lump bonus across goals with dollar amounts.</p>
+          </a>
+          <a href="loan-payoff.html" class="block bg-white rounded-xl border border-slate-200 p-4 hover:border-blue-300 hover:shadow-sm transition-all">
+            <h3 class="font-bold text-slate-800">Loan Payoff</h3>
+            <p class="text-sm text-slate-600 mt-1">Model debt payoff with extra payments and strategies.</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="seo-faq max-w-5xl mx-auto px-0" aria-labelledby="faq-paycheck-heading">
+        <h2 id="faq-paycheck-heading">Frequently Asked Questions</h2>
+        <details>
+          <summary>What is the difference between gross pay and net pay?</summary>
+          <div class="faq-answer">Gross pay is your compensation before mandatory taxes and most deductions. Net pay is what lands in your bank account after federal income tax, state income tax (if applicable), FICA, and other payroll deductions. This page estimates taxes only—not every deduction your employer might take.</div>
+        </details>
+        <details>
+          <summary>How does FICA work?</summary>
+          <div class="faq-answer">FICA combines Social Security and Medicare employee withholding. Social Security applies at 6.2% up to the IRS wage base. Medicare is 1.45% on covered wages with no wage cap, and an extra 0.9% can apply after higher income thresholds. Employers pay separate matching amounts that do not reduce your take-home.</div>
+        </details>
+        <details>
+          <summary>Why does my take-home pay differ from W-2 Box 1?</summary>
+          <div class="faq-answer">Box 1 is federal taxable wages, not take-home cash. Your paycheck subtracts withheld taxes, post-tax benefits, garnishments, and optional contributions that may not reduce Box 1 the same way. Bonuses, year-end true-ups, and cafeteria plan elections also create differences.</div>
+        </details>
+        <details>
+          <summary>How does state tax affect my paycheck?</summary>
+          <div class="faq-answer">States set their own rates and brackets (or no income tax). Withholding is usually stacked on federal withholding using state rules. Local income taxes—common in some cities—are not modeled here, so residents in those areas should expect additional withholding not shown.</div>
+        </details>
+        <details>
+          <summary>When should I adjust my W-4 withholding?</summary>
+          <div class="faq-answer">Update your Form W-4 when your household income, dependents, spouse’s job, or side income changes enough that you are consistently over- or under-withheld. Use the IRS Tax Withholding Estimator for official guidance; this calculator is only a rough parallel.</div>
+        </details>
+      </section>
+    </div>
+  </div>
+
+  <nav class="mobile-bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-lg z-50">
+    <div class="flex items-center justify-around py-2 px-1">
+      <a href="index.html" class="flex flex-col items-center gap-0.5 px-2 py-1.5 text-slate-500 min-w-0">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+        <span class="text-[10px] font-semibold leading-tight text-center">Budget</span>
+      </a>
+      <a href="commission-breakdown.html" class="flex flex-col items-center gap-0.5 px-2 py-1.5 text-slate-500 min-w-0">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span class="text-[10px] font-semibold leading-tight text-center">Bonus</span>
+      </a>
+      <a href="loan-payoff.html" class="flex flex-col items-center gap-0.5 px-2 py-1.5 text-slate-500 min-w-0">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+        <span class="text-[10px] font-semibold leading-tight text-center">Loan</span>
+      </a>
+      <a href="paycheck-calculator.html" class="flex flex-col items-center gap-0.5 px-2 py-1.5 text-blue-600 min-w-0" aria-current="page">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+        <span class="text-[10px] font-semibold leading-tight text-center">Paycheck</span>
+      </a>
+    </div>
+  </nav>
+
+  <footer class="bg-white border-t border-slate-200 py-6 mt-8">
+    <div class="max-w-5xl mx-auto px-4 md:px-8">
+      <div class="flex flex-col gap-4 text-sm text-slate-500 pb-28 md:pb-0">
+        <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs font-medium">
+          <a href="index.html" class="hover:text-blue-600">Budget</a>
+          <span class="text-slate-300" aria-hidden="true">·</span>
+          <a href="commission-breakdown.html" class="hover:text-blue-600">Bonus</a>
+          <span class="text-slate-300" aria-hidden="true">·</span>
+          <a href="loan-payoff.html" class="hover:text-blue-600">Loan</a>
+          <span class="text-slate-300" aria-hidden="true">·</span>
+          <a href="paycheck-calculator.html" class="text-blue-600 font-semibold" aria-current="page">Paycheck</a>
+        </div>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
+          <div class="flex items-center gap-2">
+            <span class="text-lg" aria-hidden="true">🔒</span>
+            <span>100% Private. Data stays on your device.</span>
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs w-full md:w-auto border-t border-slate-100 pt-4 md:border-t-0 md:pt-0 md:pl-4 md:border-l md:border-slate-200">
+            <a href="about.html" class="hover:text-blue-600">About</a>
+            <span class="text-slate-300" aria-hidden="true">·</span>
+            <a href="privacy-policy.html" class="hover:text-blue-600">Privacy Policy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="js/paycheck-calculator-page.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (window.lucide) lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
