@@ -73,6 +73,58 @@
     .dragging { opacity: 0.55; }
     .drop-target { outline: 2px dashed rgba(59,130,246,.45); outline-offset: -6px; }
 
+    .seo-intro h1 {
+      font-size: 1.875rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: #1e293b;
+      line-height: 1.2;
+      margin: 0 0 0.75rem;
+    }
+    .seo-intro p {
+      color: #64748b;
+      font-size: 0.9375rem;
+      line-height: 1.65;
+      margin: 0;
+    }
+    .seo-faq {
+      margin-top: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .seo-faq > h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0 0 1rem;
+    }
+    .seo-faq details {
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      margin-bottom: 0.5rem;
+      background: #fff;
+      overflow: hidden;
+    }
+    .seo-faq summary {
+      cursor: pointer;
+      padding: 0.875rem 1rem;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      color: #334155;
+      list-style: none;
+    }
+    .seo-faq summary::-webkit-details-marker { display: none; }
+    .seo-faq details[open] summary {
+      color: #2563eb;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .seo-faq .faq-answer {
+      padding: 0 1rem 1rem;
+      margin: 0;
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: #475569;
+    }
+
     @media (max-width: 768px) {
       body {
         padding-top: clamp(48px, 12vw, 60px);
@@ -323,7 +375,8 @@
       }
 
       /* Ensure header to first card spacing matches uniform rhythm */
-      header.mb-8 {
+      header.mb-8,
+      .seo-intro.mb-8 {
         margin-bottom: clamp(16px, 4vw, 20px) !important;
       }
 
@@ -391,6 +444,11 @@
 
   <div class="p-4 md:p-8 flex-1">
     <div id="app" class="max-w-5xl mx-auto">
+      <section class="seo-intro mb-8 bg-white rounded-2xl border border-slate-200 p-5 md:p-6 shadow-sm" aria-labelledby="seo-budget-heading">
+        <h1 id="seo-budget-heading">Monthly Budget Planner for Bi-Weekly and Semi-Monthly Paychecks</h1>
+        <p>TransparentBudget turns each paycheck into a realistic monthly spending plan so you can cover rent, savings, and day-to-day costs without guessing. It is built for people paid every two weeks or twice a month who still need a single monthly number for bills and goals. Everything runs in your browser and stays on your device.</p>
+      </section>
+
       <!-- Mobile Input Card (shows first on mobile, hidden on desktop) -->
       <div class="mobile-input-card md:hidden">
         <div class="flex items-start gap-3 mb-3">
@@ -437,7 +495,7 @@
       <!-- Desktop Header (hidden on mobile) -->
       <header class="mb-8 desktop-only">
         <div class="space-y-1">
-          <h1 class="text-3xl font-bold tracking-tight text-slate-800">Budget Planner</h1>
+          <h2 class="text-3xl font-bold tracking-tight text-slate-800">Budget Planner</h2>
           <div class="flex items-center gap-2 text-blue-600 font-semibold bg-blue-50 px-3 py-1 rounded-full w-fit">
             <span class="text-sm uppercase tracking-wider text-xs">Estimated Monthly Income:</span>
             <span id="monthly-income-display" class="text-lg">$0</span>
@@ -557,7 +615,27 @@
         </div>
       </div>
     </div>
-  </div>
+
+      <section class="seo-faq max-w-5xl mx-auto px-0" aria-labelledby="faq-budget-heading">
+        <h2 id="faq-budget-heading">Frequently Asked Questions</h2>
+        <details>
+          <summary>How do I calculate my monthly budget from bi-weekly pay?</summary>
+          <div class="faq-answer">Multiply one after-tax bi-weekly check by 26 (paychecks per year), then divide by 12 to get an average monthly income that matches how lenders and planners think about per-month costs. Enter your per-check amount here with bi-weekly selected, and the planner converts it automatically while you assign categories.</div>
+        </details>
+        <details>
+          <summary>What is the 50/30/20 budgeting rule?</summary>
+          <div class="faq-answer">It is a simple split: about 50% of take-home pay for needs (housing, utilities, minimum debt payments), 30% for wants, and 20% for savings and extra debt payoff. It is a guideline, not a law—high rent cities or aggressive payoff goals may shift the percentages, but it is a useful starting point when you first map categories.</div>
+        </details>
+        <details>
+          <summary>How much should I spend on rent?</summary>
+          <div class="faq-answer">A common rule is to keep rent or mortgage under roughly 30% of gross income, and under half of take-home after taxes if cash flow is tight. Your safe number depends on other fixed costs, childcare, and savings goals—use this planner to see whether rent plus other must-pay lines still leaves room before you commit to a lease.</div>
+        </details>
+        <details>
+          <summary>What is the difference between bi-weekly and twice-a-month pay?</summary>
+          <div class="faq-answer">Bi-weekly means every 14 days, so most years you get 26 checks (two months have three checks). Twice a month usually means 24 checks on set calendar dates (for example the 1st and 15th), so each check covers half a calendar month. This tool converts either pattern into a consistent monthly budget so you are not surprised by short months.</div>
+        </details>
+      </section>
+    </div>
   </div>
 
   <!-- Mobile Bottom Navigation -->

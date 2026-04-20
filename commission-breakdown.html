@@ -65,6 +65,58 @@
     .dragging { opacity: 0.55; }
     .drop-target { outline: 2px dashed rgba(59,130,246,.45); outline-offset: -6px; }
 
+    .seo-intro h1 {
+      font-size: 1.875rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: #1e293b;
+      line-height: 1.2;
+      margin: 0 0 0.75rem;
+    }
+    .seo-intro p {
+      color: #64748b;
+      font-size: 0.9375rem;
+      line-height: 1.65;
+      margin: 0;
+    }
+    .seo-faq {
+      margin-top: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .seo-faq > h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0 0 1rem;
+    }
+    .seo-faq details {
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      margin-bottom: 0.5rem;
+      background: #fff;
+      overflow: hidden;
+    }
+    .seo-faq summary {
+      cursor: pointer;
+      padding: 0.875rem 1rem;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      color: #334155;
+      list-style: none;
+    }
+    .seo-faq summary::-webkit-details-marker { display: none; }
+    .seo-faq details[open] summary {
+      color: #2563eb;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .seo-faq .faq-answer {
+      padding: 0 1rem 1rem;
+      margin: 0;
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: #475569;
+    }
+
     @media (max-width: 768px) {
       body {
         padding-top: clamp(48px, 12vw, 60px);
@@ -201,7 +253,8 @@
       }
 
       /* Ensure header to first card spacing matches */
-      header.mb-8 {
+      header.mb-8,
+      .seo-intro.mb-8 {
         margin-bottom: clamp(16px, 4vw, 20px) !important;
       }
     }
@@ -247,9 +300,14 @@
 
   <div class="p-4 md:p-8 flex-1">
     <div class="max-w-5xl mx-auto">
+      <section class="seo-intro mb-8 bg-white rounded-2xl border border-slate-200 p-5 md:p-6 shadow-sm" aria-labelledby="seo-bonus-heading">
+        <h1 id="seo-bonus-heading">Bonus and Commission Breakdown Calculator</h1>
+        <p>Split a single bonus or commission check into clear percentage buckets—debt, savings, investing, fun—so you see exact dollar amounts before you spend. It is for anyone who gets irregular lump-sum pay and wants a disciplined plan without spreadsheets. Your entries stay in this browser only.</p>
+      </section>
+
       <header class="mb-8">
         <div class="space-y-1">
-          <h1 class="text-3xl font-bold tracking-tight text-slate-800">Bonus Breakdown</h1>
+          <h2 class="text-3xl font-bold tracking-tight text-slate-800">Bonus Breakdown</h2>
           <p class="text-slate-500 pt-1 text-sm">Split your bonus into percentage-based buckets.</p>
         </div>
       </header>
@@ -313,7 +371,27 @@
         <!-- Mobile cards injected here -->
       </div>
     </div>
-  </div>
+
+      <section class="seo-faq" aria-labelledby="faq-bonus-heading">
+        <h2 id="faq-bonus-heading">Frequently Asked Questions</h2>
+        <details>
+          <summary>How are bonuses taxed?</summary>
+          <div class="faq-answer">Bonuses are ordinary income, so federal and state withholding often applies at a flat supplemental rate (commonly 22% federally) unless your employer uses your W-4 to aggregate pay. FICA also applies up to applicable wage caps. Your actual tax bill depends on your total year income, credits, and deductions—use this calculator for allocation planning, then confirm withholding with payroll or a tax pro.</div>
+        </details>
+        <details>
+          <summary>How should I split my bonus paycheck?</summary>
+          <div class="faq-answer">Start with must-pay items (taxes you will owe beyond withholding, emergency fund floor, high-interest debt minimums), then assign intentional percentages to savings, investments, and lifestyle. Many people prioritize wiping out double-digit APR debt before funding taxable investing. This tool lets you model percentages until they total 100% so you can commit before the money hits checking.</div>
+        </details>
+        <details>
+          <summary>Should I put my bonus in savings or investments?</summary>
+          <div class="faq-answer">If you lack three to six months of core expenses in cash, building or topping off a high-yield savings account usually comes first. Once that base exists, long-term goals (401(k), IRA, brokerage) can take a larger slice, especially if your interest costs are low. There is no single right split—use the percentages here to stress-test how aggressive each choice feels.</div>
+        </details>
+        <details>
+          <summary>Can I use this calculator for commission checks?</summary>
+          <div class="faq-answer">Yes. Enter the net or gross commission amount you want to plan from, then treat each row as a bucket the same way you would for a bonus. If commissions vary month to month, run a new scenario each time you are paid so your allocation matches the actual check size.</div>
+        </details>
+      </section>
+    </div>
   </div>
 
   <!-- Mobile Bottom Navigation -->

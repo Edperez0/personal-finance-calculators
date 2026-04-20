@@ -260,7 +260,8 @@
       }
 
       /* Ensure header to first card spacing matches uniform rhythm */
-      header.mb-8 {
+      header.mb-8,
+      .seo-intro.mb-8 {
         margin-bottom: clamp(16px, 4vw, 20px) !important;
       }
 
@@ -464,6 +465,69 @@
       }
     }
 
+
+    .seo-intro h1 {
+      font-size: 1.875rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: #1e293b;
+      line-height: 1.2;
+      margin: 0 0 0.75rem;
+    }
+    .seo-intro p {
+      color: #64748b;
+      font-size: 0.9375rem;
+      line-height: 1.65;
+      margin: 0;
+    }
+    .seo-faq {
+      margin-top: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .seo-faq > h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0 0 1rem;
+    }
+    .seo-faq details {
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      margin-bottom: 0.5rem;
+      background: #fff;
+      overflow: hidden;
+    }
+    .seo-faq summary {
+      cursor: pointer;
+      padding: 0.875rem 1rem;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      color: #334155;
+      list-style: none;
+    }
+    .seo-faq summary::-webkit-details-marker { display: none; }
+    .seo-faq details[open] summary {
+      color: #2563eb;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .seo-faq .faq-answer {
+      padding: 0 1rem 1rem;
+      margin: 0;
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: #475569;
+    }
+    .seo-affiliate-note {
+      margin-top: 1.75rem;
+      padding: 1rem 1.25rem;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: #475569;
+    }
+
     /* Hide mobile elements on desktop */
     .mobile-bottom-nav {
       display: none;
@@ -509,12 +573,10 @@
     <div class="max-w-5xl mx-auto">
       <input id="debug-toggle" type="checkbox" class="hidden" aria-hidden="true">
       <!-- Header -->
-      <header class="mb-8">
-        <div class="space-y-1">
-          <h1 class="text-3xl font-bold tracking-tight text-slate-800">Loan Payoff</h1>
-          <p class="text-slate-500 pt-1 text-sm">Student, auto, personal, mortgage, or credit card—enter balance, APR, and payments for any loan type.</p>
-        </div>
-      </header>
+      <section class="seo-intro mb-8 bg-white rounded-2xl border border-slate-200 p-5 md:p-6 shadow-sm" aria-labelledby="seo-loan-heading">
+        <h1 id="seo-loan-heading">Loan Payoff Calculator for Student Loans, Auto Loans, Personal Loans, and Credit Cards</h1>
+        <p>Model payoff dates using daily interest, optional extra payments, and avalanche or snowball ordering—whether you are tackling student debt, a car note, a personal loan, or high-APR cards. TransparentBudget runs entirely in your browser so balances and scenarios never leave your device.</p>
+      </section>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Sidebar: Inputs -->
@@ -740,6 +802,29 @@
         </div>
       </div>
     </div>
+
+
+    <section class="seo-faq" aria-labelledby="faq-loan-heading">
+      <h2 id="faq-loan-heading">Frequently Asked Questions</h2>
+      <details>
+        <summary>What is the debt avalanche method?</summary>
+        <div class="faq-answer">You send every extra dollar to the balance with the highest APR first while paying minimums on everything else. As each account is cleared, its payment rolls into the next-highest-rate debt. For student, auto, personal, or card balances, this approach usually minimizes total interest paid versus other orderings.</div>
+      </details>
+      <details>
+        <summary>What is the debt snowball method?</summary>
+        <div class="faq-answer">You target the smallest balance first regardless of rate, then roll freed-up cash flow toward the next smallest. You may pay slightly more interest than with an avalanche, but the quick wins can help you stay consistent—especially when motivation matters as much as math.</div>
+      </details>
+      <details>
+        <summary>How do I pay off my loans faster?</summary>
+        <div class="faq-answer">Increase your scheduled payment above the minimum, add lump sums when you can, and avoid growing balances with new charges on revolving debt. Bi-weekly half-payments on installment loans can create an extra full payment each year. This calculator shows how those changes shift your payoff month and total interest.</div>
+      </details>
+      <details>
+        <summary>Does making extra payments really save money on interest?</summary>
+        <div class="faq-answer">Yes, because interest accrues on the remaining principal. Every principal reduction today stops future interest from compounding on that amount. The effect is largest on high-APR revolving debt and still meaningful on lower-rate installment loans over long terms.</div>
+      </details>
+    </section>
+    <p class="seo-affiliate-note">Could a lower interest rate speed up your payoff date? Refinancing or consolidating your loans could save you thousands. Compare rates:</p>
+    <!-- AFFILIATE LINKS GO HERE -->
   </div>
   </div>
 
