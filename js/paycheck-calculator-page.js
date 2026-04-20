@@ -350,7 +350,7 @@ function renderScenariosList() {
   const scenarios = getAllScenarios();
   const names = Object.keys(scenarios);
   if (names.length === 0) {
-    list.innerHTML = '<p class="text-xs text-slate-400 text-center py-2">No saved scenarios yet</p>';
+    list.innerHTML = '<p class="scenarios-empty">No saved scenarios yet</p>';
     return;
   }
   list.innerHTML = names.map((name) => {
@@ -359,18 +359,14 @@ function renderScenariosList() {
     const safe = name.replace(/'/g, "\\'");
     const meta = `${data.state || ""} &middot; ${data.filing || ""} &middot; ${date}`;
     return `
-      <div class="p-3 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-all">
-        <div class="flex items-center justify-between">
-          <div class="flex-1 min-w-0 cursor-pointer" onclick="window.tbLoadPaycheckScenario('${safe}')">
-            <div class="font-semibold text-sm text-slate-700 truncate">${escapeHtml(name)}</div>
-            <div class="text-[10px] text-slate-400">${meta}</div>
-          </div>
-          <button onclick="event.stopPropagation(); window.tbDeletePaycheckScenario('${safe}')" class="ml-2 text-slate-400 hover:text-red-500 transition-all" aria-label="Delete scenario">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-            </svg>
-          </button>
+      <div class="scenario-item">
+        <div class="scenario-info" onclick="window.tbLoadPaycheckScenario('${safe}')">
+          <div class="scenario-name">${escapeHtml(name)}</div>
+          <div class="scenario-meta">${meta}</div>
         </div>
+        <button class="scenario-delete" onclick="event.stopPropagation(); window.tbDeletePaycheckScenario('${safe}')" aria-label="Delete scenario">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        </button>
       </div>`;
   }).join("");
 }
